@@ -9,4 +9,6 @@ add_executable(src main.cpp
         WaterReservoir.h
         PumpingStation.cpp
         PumpingStation.h
+        City.cpp
+        City.h
 )
