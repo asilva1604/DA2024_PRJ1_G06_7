@@ -5,13 +5,8 @@
 #include "WaterReservoir.h"
 
 WaterReservoir::WaterReservoir(const std::string &name, const std::string &municipality, const unsigned &id,
-const std::string &code, const unsigned &maxDelivery) {
-    name_ = name;
-    municipality_ = municipality;
-    id_ = id;
-    code_ = code;
-    maxDelivery_ = maxDelivery;
-}
+const std::string &code, const unsigned &maxDelivery) : name_(name), municipality_(municipality),
+id_(id), code_(code), maxDelivery_(maxDelivery){}
 
 const std::string & WaterReservoir::getName() const {
     return name_;
