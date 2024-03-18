@@ -79,5 +79,5 @@ const std::string & NetworkPoint::getPointType() const {
 }
 
 bool NetworkPoint::operator==(const NetworkPoint &other) const{
-    return this->id_ == other.id_;
+    return this->code_ == other.code_;
 }

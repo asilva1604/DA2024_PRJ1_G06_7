@@ -10,7 +10,14 @@ FileReader::FileReader(const std::string &fName) {
 
 std::vector<std::vector<std::string>> FileReader::getData() {
     std::string line;
-    std::getline(file_, line);
+    // Clear data_ before reading new data
+    data_.clear();
+
+    // Read and process the first line
+    if (std::getline(file_, line)) {
+    }
+
+    // Read and process the rest of the lines
     while (std::getline(file_, line)) {
         std::istringstream iss(line);
         std::string value;
