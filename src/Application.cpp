@@ -10,6 +10,7 @@ Application::Application() {
     FileReader cities("../../dataset/Cities_Madeira.csv");
     FileReader reservoirs("../../dataset/Reservoirs_Madeira.csv");
     FileReader stations("../../dataset/Stations_Madeira.csv");
+    FileReader pipes("../../dataset/Pipes_Madeira.csv");
 
     for (const auto &v : cities.getData()) {
         network_.addVertex(NetworkPoint(v.at(0), std::stoi(v.at(1)), v.at(2),
@@ -23,6 +24,15 @@ Application::Application() {
 
     for (const auto &v : stations.getData()) {
         network_.addVertex(NetworkPoint(std::stoi(v.at(0)), v.at(1)));
+    }
+
+    for (const auto &v : pipes.getData()) {
+        network_.addEdge(NetworkPoint(v.at(0)), NetworkPoint(v.at(1)),
+            std::stod(v.at(2)));
+        if (v.at(3) == "0") {
+            network_.addEdge(NetworkPoint(v.at(0)), NetworkPoint(v.at(1)),
+                std::stod(v.at(2)));
+        }
     }
 }
 

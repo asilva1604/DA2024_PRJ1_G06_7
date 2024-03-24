@@ -21,6 +21,7 @@ public:
     NetworkPoint(const std::string& city, const unsigned& id, const std::string& code, const float& demand, const std::string& population);
     NetworkPoint(const std::string& reservoir, const std::string& municipality, const unsigned& id, const std::string& code, const int& maxDelivery);
     NetworkPoint(const unsigned& id, const std::string& code);
+    NetworkPoint(const std::string &code); //just for finding vertexes
     [[nodiscard]] const std::string& getCity() const;
     [[nodiscard]] unsigned getId() const;
     [[nodiscard]] const std::string& getCode() const;
