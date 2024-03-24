@@ -42,6 +42,18 @@ NetworkPoint::NetworkPoint(const unsigned &id, const std::string &code) {
     pointType_ = "station";
 }
 
+NetworkPoint::NetworkPoint(const std::string &code) {
+    id_ = 0;
+    city_ = "";
+    code_ = code;
+    demand_ = 0;
+    population_ = "";
+    reservoir_ = "";
+    municipality_ = "";
+    maxDelivery_ = 0;
+    pointType_ = "";
+}
+
 const std::string& NetworkPoint::getCity() const {
     return city_;
 }
@@ -79,5 +91,5 @@ const std::string & NetworkPoint::getPointType() const {
 }
 
 bool NetworkPoint::operator==(const NetworkPoint &other) const{
-    return this->id_ == other.id_;
+    return this->code_ == other.code_;
 }

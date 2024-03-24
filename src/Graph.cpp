@@ -199,7 +199,7 @@ int Graph::getNumVertex() const {
     return vertexSet.size();
 }
 
-std::vector<Vertex<NetworkPoint> *> Graph::getVertexSet() const {
+std::unordered_map<std::string, Vertex<NetworkPoint> *> Graph::getVertexSet() const {
     return vertexSet;
 }
 
@@ -207,21 +207,11 @@ std::vector<Vertex<NetworkPoint> *> Graph::getVertexSet() const {
  * Auxiliary function to find a vertex with a given content.
  */
 Vertex<NetworkPoint> * Graph::findVertex(const NetworkPoint &in) const {
-    for (auto v : vertexSet)
-        if (v->getInfo() == in)
-            return v;
+    auto a = vertexSet.find(in.getCode());
+    if (a != vertexSet.end()) return a->second;
     return nullptr;
 }
 
-/*
- * Finds the index of the vertex with a given content.
- */
-int Graph::findVertexIdx(const NetworkPoint &in) const {
-    for (unsigned i = 0; i < vertexSet.size(); i++)
-        if (vertexSet[i]->getInfo() == in)
-            return i;
-    return -1;
-}
 /*
  *  Adds a vertex with a given content or info (in) to a graph (this).
  *  Returns true if successful, and false if a vertex with that content already exists.
@@ -229,7 +219,7 @@ int Graph::findVertexIdx(const NetworkPoint &in) const {
 bool Graph::addVertex(const NetworkPoint &in) {
     if (findVertex(in) != nullptr)
         return false;
-    vertexSet.push_back(new Vertex<NetworkPoint>(in));
+    vertexSet.emplace(in.getCode(), new Vertex<NetworkPoint>(in));
     return true;
 }
 
@@ -239,7 +229,25 @@ bool Graph::addVertex(const NetworkPoint &in) {
  *  Returns true if successful, and false if such vertex does not exist.
  */
 bool Graph::removeVertex(const NetworkPoint &in) {
-    for (auto it = vertexSet.begin(); it != vertexSet.end(); it++) {
+    auto it = vertexSet.find(in.getCode());
+
+    if (it == vertexSet.end()) return false;
+
+    it->second->removeOutgoingEdges();
+
+    auto itt = vertexSet.begin();
+
+    while (itt != vertexSet.end()) {
+        itt->second->removeEdge(it->second->getInfo());
+        ++itt;
+    }
+
+    vertexSet.erase(it);
+
+    delete it->second;
+    return true;
+
+    /*for (auto it = vertexSet.begin(); it != vertexSet.end(); it++) {
         if ((*it)->getInfo() == in) {
             auto v = *it;
             v->removeOutgoingEdges();
@@ -250,8 +258,7 @@ bool Graph::removeVertex(const NetworkPoint &in) {
             delete v;
             return true;
         }
-    }
-    return false;
+    }`*/
 }
 
 /*
@@ -302,10 +309,10 @@ bool Graph::addBidirectionalEdge(const NetworkPoint &sourc, const NetworkPoint &
 std::vector<NetworkPoint> Graph::dfs() const {
     std::vector<NetworkPoint> res;
     for (auto v : vertexSet)
-        v->setVisited(false);
+        v.second->setVisited(false);
     for (auto v : vertexSet)
-        if (!v->isVisited())
-            dfsVisit(v, res);
+        if (!v.second->isVisited())
+            dfsVisit(v.second, res);
     return res;
 }
 
@@ -322,7 +329,7 @@ std::vector<NetworkPoint> Graph::dfs(const NetworkPoint & source) const {
     }
     // Set that no vertex has been visited yet
     for (auto v : vertexSet) {
-        v->setVisited(false);
+        v.second->setVisited(false);
     }
     // Perform the actual DFS using recursion
     dfsVisit(s, res);
@@ -361,7 +368,7 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
 
     // Set that no vertex has been visited yet
     for (auto v : vertexSet) {
-        v->setVisited(false);
+        v.second->setVisited(false);
     }
 
     // Perform the actual BFS using a queue
@@ -394,12 +401,12 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
 
 bool Graph::isDAG() const {
     for (auto v : vertexSet) {
-        v->setVisited(false);
-        v->setProcesssing(false);
+        v.second->setVisited(false);
+        v.second->setProcesssing(false);
     }
     for (auto v : vertexSet) {
-        if (! v->isVisited()) {
-            if ( ! dfsIsDAG(v) ) return false;
+        if (! v.second->isVisited()) {
+            if ( ! dfsIsDAG(v.second) ) return false;
         }
     }
     return true;
@@ -439,10 +446,10 @@ std::vector<NetworkPoint> Graph::topsort() const {
     std::vector<NetworkPoint> res;
 
     for (auto v : vertexSet) {
-        v->setIndegree(0);
+        v.second->setIndegree(0);
     }
     for (auto v : vertexSet) {
-        for (auto e : v->getAdj()) {
+        for (auto e : v.second->getAdj()) {
             unsigned int indegree = e->getDest()->getIndegree();
             e->getDest()->setIndegree(indegree + 1);
         }
@@ -450,8 +457,8 @@ std::vector<NetworkPoint> Graph::topsort() const {
 
     std::queue<Vertex<NetworkPoint> *> q;
     for (auto v : vertexSet) {
-        if (v->getIndegree() == 0) {
-            q.push(v);
+        if (v.second->getIndegree() == 0) {
+            q.push(v.second);
         }
     }
 
