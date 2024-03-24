@@ -116,7 +116,7 @@ public:
     bool addBidirectionalEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w);
 
     int getNumVertex() const;
-    std::vector<Vertex<NetworkPoint> *> getVertexSet() const;
+    std::unordered_map<std::string, Vertex<NetworkPoint> *> getVertexSet() const;
 
     std:: vector<NetworkPoint> dfs() const;
     std:: vector<NetworkPoint> dfs(const NetworkPoint & source) const;
@@ -127,15 +127,10 @@ public:
     bool dfsIsDAG(Vertex<NetworkPoint> *v) const;
     std::vector<NetworkPoint> topsort() const;
 protected:
-    std::vector<Vertex<NetworkPoint> *> vertexSet;    // vertex set
+    std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
 
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
-
-    /*
-     * Finds the index of the vertex with a given content.
-     */
-    int findVertexIdx(const NetworkPoint &in) const;
 };
 
 void deleteMatrix(int **m, int n);
