@@ -13,5 +13,6 @@ int main() {
     for (const auto &e : a.getNetwork().getVertexSet().begin()->second->getAdj()) {
         std:: cout << e->getOrig()->getInfo().getCode() << "||" << e->getDest()->getInfo().getCode() << "\n";
     }
+
     return 0;
 }
