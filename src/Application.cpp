@@ -30,12 +30,14 @@ Application::Application() {
         network_.addEdge(NetworkPoint(v.at(0)), NetworkPoint(v.at(1)),
             std::stod(v.at(2)));
         if (v.at(3) == "0") {
-            network_.addEdge(NetworkPoint(v.at(0)), NetworkPoint(v.at(1)),
+            std::cout << "this edge is bidirectional\n";
+            std::cout << "adding edge from " << v.at(1) << " to " << v.at(0) << "\n";
+            network_.addEdge(NetworkPoint(v.at(1)), NetworkPoint(v.at(0)),
                 std::stod(v.at(2)));
         }
     }
 
-    network_.getMaxFlow(NetworkPoint("C_10"));
+    network_.getMaxFlow(NetworkPoint("C_6"));
 }
 
 const Graph & Application::getNetwork() const {

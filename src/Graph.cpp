@@ -2,6 +2,7 @@
 // Created by alexandre on 07-03-2024.
 //
 
+#include <climits>
 #include "Graph.h"
 
 /************************* Vertex  **************************/
@@ -358,8 +359,8 @@ void Graph::dfsVisit(Vertex<NetworkPoint> *v, std::vector<NetworkPoint> & res) c
  * from the vertex with the given source contents (source).
  * Returns a vector with the contents of the vertices by bfs order.
  */
-std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
-    std::vector<NetworkPoint> res;
+std::vector<Vertex<NetworkPoint> *> Graph::bfs(const NetworkPoint & source) const {
+    std::vector<Vertex<NetworkPoint> *> res;
     // Get the source vertex
     auto s = findVertex(source);
     if (s == nullptr) {
@@ -378,7 +379,7 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
     while (!q.empty()) {
         auto v = q.front();
         q.pop();
-        res.push_back(v->getInfo());
+        res.push_back(v);
         for (auto & e : v->getAdj()) {
             auto w = e->getDest();
             if ( ! w->isVisited()) {
@@ -507,104 +508,6 @@ Graph::~Graph() {
     deleteMatrix(pathMatrix, vertexSet.size());
 }
 
-void Graph::calculateMaxFlowForAll() {
-    // First, add super source and super sink
-    addSuperSourceAndSink();
-
-    auto s = findVertex(NetworkPoint("source"));
-    auto t = findVertex(NetworkPoint("sink"));
-
-    if (s == nullptr || t == nullptr) {
-        std::cout << "nullptr error";
-        return;
-    }
-
-    // Run Edmonds-Karp algorithm for each sink vertex
-    for (auto& pair : vertexSet) {
-        Vertex<NetworkPoint>* v = pair.second;
-        if (v->getAdj().empty()) // Skip vertices with no outgoing edges (sources)
-            continue;
-        if (v->getIncoming().empty()) // Skip vertices with no incoming edges (sinks)
-            continue;
-
-        // Run Edmonds-Karp algorithm from super source to current sink vertex
-        findAugPath(s, v);
-        while (findAugPath(s, v)) {
-            unsigned f = findMinimalResidualAlongPath(s, v);
-            augment(s, v, f);
-        }
-    }
-
-    // Mark that max flow calculation has been done
-    maxFlowRan = true;
-}
-
-
-bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const {
-    // Reset path pointers
-    for (auto& pair : vertexSet) {
-        pair.second->setPath(nullptr);
-    }
-
-    // Use BFS to find an augmenting path
-    std::queue<Vertex<NetworkPoint>*> queue;
-    std::unordered_map<Vertex<NetworkPoint>*, bool> visited;
-
-    for (auto& pair : vertexSet) {
-        visited[pair.second] = false;
-    }
-
-    queue.push(s);
-    visited[s] = true;
-
-    while (!queue.empty()) {
-        Vertex<NetworkPoint>* u = queue.front();
-        queue.pop();
-
-        for (Edge<NetworkPoint>* edge : u->getAdj()) {
-            Vertex<NetworkPoint>* v = edge->getDest();
-            if (!visited[v] && edge->getWeight() > 0) {
-                visited[v] = true;
-                v->setPath(edge); // Update the path to vertex v
-                if (v == t)
-                    return true; // Found augmenting path to sink
-                queue.push(v);
-            }
-        }
-    }
-
-    // No augmenting path found
-    return false;
-}
-
-unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const {
-    unsigned minResidual = INF;
-    Edge<NetworkPoint>* edge = p->getPath();
-    while (edge) {
-        if (edge->getWeight() < minResidual)
-            minResidual = edge->getWeight();
-        edge = edge->getOrig()->getPath();
-    }
-    return minResidual;
-}
-
-void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f) {
-    // Backtrack through the path from sink to source and update flow
-    Vertex<NetworkPoint>* current = t;
-    if (current == nullptr) return;
-    Edge<NetworkPoint>* parentEdge = current->getPath();
-    while (parentEdge->getOrig() != s) {
-        parentEdge->setFlow(parentEdge->getFlow() + f); // Increase flow along the forward edge
-        parentEdge->getReverse()->setFlow(parentEdge->getReverse()->getFlow() - f); // Decrease flow along the reverse edge
-        current = parentEdge->getOrig();
-        parentEdge = current->getPath();
-    }
-    // Update flow for the edge from super source to the next vertex in the path
-    parentEdge->setFlow(parentEdge->getFlow() + f);
-    // Update flow for the reverse edge
-    parentEdge->getReverse()->setFlow(parentEdge->getReverse()->getFlow() - f);
-}
-
 void Graph::addSuperSource() {
     std::vector<Vertex<NetworkPoint> *> sources;
     for (const auto &p : vertexSet) {
@@ -648,19 +551,95 @@ void Graph::addSuperSourceAndSink() {
 }
 
 void Graph::getMaxFlow(NetworkPoint city) {
-    if (!maxFlowRan) {
-        calculateMaxFlowForAll();
-        maxFlowRan = true;
+    addSuperSourceAndSink();
+    Vertex<NetworkPoint> *source = findVertex(NetworkPoint("source"));
+    Vertex<NetworkPoint> *sink = findVertex(NetworkPoint("sink"));
+    Vertex<NetworkPoint> *c = findVertex(city);
+    if (source == nullptr || sink == nullptr || c == nullptr) {
+        return;
     }
-
-    auto sink = findVertex(city);
-
-    unsigned max_flow = 0;
-    for (auto e : sink->getIncoming()) {
-        //std::cout << e->getWeight() << " " << e->getFlow() << std::endl;
-        max_flow+= e->getFlow();
+    maxFlowRan = true;
+    edmondKarp(source, c);
+    for (const auto edge : c->getIncoming()) {
+        std::cout << edge->getFlow() << std::endl;
     }
-
-    std::cout << max_flow << std::endl;
 }
+
+void Graph::edmondKarp(Vertex<NetworkPoint> *source, Vertex<NetworkPoint> *sink) {
+    // Ensure the graph has not been run with maximum flow calculation before
+    if (!maxFlowRan) {
+        addSuperSourceAndSink(); // Add super source and sink for Edmonds-Karp
+        maxFlowRan = true; // Indicate that max flow calculation has been performed
+
+        // Continuously augment flow until no more augmenting paths can be found
+        while (bfs(source, sink, parent)) {
+            double bottleneckCapacity = std::numeric_limits<double>::infinity();
+
+            // Find the bottleneck capacity along the augmenting path
+            for (Vertex<NetworkPoint> *v = sink; v != source; v = parent[v]->getReverse()->getOrig()) {
+                Edge<NetworkPoint> *edge = parent[v];
+                bottleneckCapacity = std::min(bottleneckCapacity, edge->getResidual());
+            }
+
+            // Update flow along the augmenting path
+            for (Vertex<NetworkPoint> *v = sink; v != source; v = parent[v]->getReverse()->getOrig()) {
+                Edge<NetworkPoint> *edge = parent[v];
+                edge->setFlow(edge->getFlow() + bottleneckCapacity);
+                edge->getReverse()->setFlow(edge->getReverse()->getFlow() - bottleneckCapacity);
+            }
+        }
+
+        // After finding maximum flow, remove super source and sink
+        // Optionally, you can implement a method to remove these nodes.
+    }
+}
+
+bool Graph::bfs(Vertex<NetworkPoint> *source, Vertex<NetworkPoint> *sink, std::unordered_map<Vertex<NetworkPoint>*, Vertex<NetworkPoint>*>& parent) {
+    // Reset the parent map
+    parent.clear();
+
+    // Create a visited map and mark all vertices as not visited
+    std::unordered_map<Vertex<NetworkPoint>*, bool> visited;
+    for (const auto& vertexPair : vertexSet) {
+        visited[vertexPair.second] = false;
+    }
+
+    // Create a queue, enqueue source vertex and mark it as visited
+    std::queue<Vertex<NetworkPoint>*> queue;
+    queue.push(source);
+    visited[source] = true;
+    parent[source] = nullptr;
+
+    // Standard BFS loop
+    while (!queue.empty()) {
+        Vertex<NetworkPoint>* u = queue.front();
+        queue.pop();
+
+        for (const auto& edge : u->getAdj()) {
+            Vertex<NetworkPoint>* v = edge->getDest();
+            // If the vertex is not visited and its residual capacity is greater than 0
+            if (!visited[v] && edge->getResidual() > 0) {
+                // Mark the vertex as visited and store its parent
+                queue.push(v);
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+
+    // If we reached sink in BFS starting from source, then return true, else false
+    return visited[sink];
+}
+
+template <class T>
+Edge<T>* Vertex<T>::findEdge(Vertex<T>* dest) {
+    for (auto& edge : adj) {
+        if (edge->getDest() == dest) {
+            return edge;
+        }
+    }
+    return nullptr;
+}
+
+
 

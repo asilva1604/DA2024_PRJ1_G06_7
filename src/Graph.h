@@ -44,6 +44,7 @@ public:
     Edge<T> * addEdge(Vertex<T> *dest, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
+    Edge<T>* findEdge(Vertex<T>* dest);
 
 protected:
     T info;                // info node
@@ -79,6 +80,7 @@ public:
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
+    double getResidual() const;
 protected:
     Vertex<T> * dest; // destination vertex
     double weight; // edge weight, can also be used for capacity
@@ -90,8 +92,13 @@ protected:
     Vertex<T> *orig;
     Edge<T> *reverse = nullptr;
 
-    double flow; // for flow-related problems
+    double flow = 0; // for flow-related problems
 };
+
+template<class T>
+double Edge<T>::getResidual() const {
+    return weight - flow;
+}
 
 /********************** Graph  ****************************/
 
@@ -124,25 +131,22 @@ public:
     std:: vector<NetworkPoint> dfs() const;
     std:: vector<NetworkPoint> dfs(const NetworkPoint & source) const;
     void dfsVisit(Vertex<NetworkPoint> *v,  std::vector<NetworkPoint> & res) const;
-    std::vector<NetworkPoint> bfs(const NetworkPoint & source) const;
+    std::vector<Vertex<NetworkPoint> *> bfs(const NetworkPoint & source) const;
 
     bool isDAG() const;
     bool dfsIsDAG(Vertex<NetworkPoint> *v) const;
     std::vector<NetworkPoint> topsort() const;
-
+    void edmondKarp(Vertex<NetworkPoint> *source, Vertex<NetworkPoint> *sink);
     /**
      * @brief calculates max flow to a certain city
      * @param city
      */
     void getMaxFlow(NetworkPoint city);
 
+    bool bfs(Vertex<NetworkPoint> *source, Vertex<NetworkPoint> *sink, std::unordered_map<Vertex<NetworkPoint>*, Vertex<NetworkPoint>*>& parent);
+
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
-    //TODO REWRITE THIS
-    unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;
-    //TODO REWRITE THIS
-    bool findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const;
-    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f);
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
     void addSuperSourceAndSink();
@@ -151,7 +155,6 @@ protected:
     /**
      * should only run once, is supposed to calculate max flow to all cities, which are the sinks
      */
-    void calculateMaxFlowForAll();
 
     /**
      * serves to store if the maximum flow edmond karps algorithm has already been ran
