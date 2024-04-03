@@ -34,6 +34,8 @@ Application::Application() {
                 std::stod(v.at(2)));
         }
     }
+
+    network_.getMaxFlow(NetworkPoint("C_2"));
 }
 
 const Graph & Application::getNetwork() const {

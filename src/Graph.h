@@ -10,6 +10,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include <float.h>
 #include "NetworkPoint.h"
 
 template <class T>
@@ -57,6 +58,7 @@ protected:
     std::vector<Edge<T> *> incoming; // incoming edges
 
     void deleteEdge(Edge<T> *edge);
+
 };
 
 /********************** Edge  ****************************/
@@ -126,11 +128,34 @@ public:
     bool isDAG() const;
     bool dfsIsDAG(Vertex<NetworkPoint> *v) const;
     std::vector<NetworkPoint> topsort() const;
+
+    /**
+     * @brief calculates max flow to a certain city
+     * @param city
+     */
+    void getMaxFlow(NetworkPoint city);
+
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
-
+    //TODO REWRITE THIS
+    unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;
+    //TODO REWRITE THIS
+    bool findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const;
+    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f);
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
+    void addSuperSourceAndSink();
+    void addSuperSource();
+
+    /**
+     * should only run once, is supposed to calculate max flow to all cities, which are the sinks
+     */
+    void calculateMaxFlowForAll();
+
+    /**
+     * serves to store if the maximum flow edmond karps algorithm has already been ran
+     */
+    bool maxFlowRan = false;
 };
 
 void deleteMatrix(int **m, int n);

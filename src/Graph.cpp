@@ -506,3 +506,159 @@ Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
+
+void Graph::calculateMaxFlowForAll() {
+    addSuperSourceAndSink();
+
+    auto s = findVertex(NetworkPoint("source"));
+    auto t = findVertex(NetworkPoint("sink"));
+
+    if (s == nullptr || t == nullptr || s==t) {
+        std::cout << "Error! Either vertex not found or they are the same";
+        return;
+    }
+
+    //zero the flow
+    for (auto p : vertexSet) {
+        for (auto e : p.second->getAdj()) {
+            e->setFlow(0);
+        }
+    }
+
+    while (findAugPath(s, t))  {
+        unsigned fl = findMinimalResidualAlongPath(s, t);
+        augment(s, t, fl);
+    }
+
+    /*
+    unsigned max_flow = 0;
+    for (auto edge : s->getAdj()) {
+        max_flow+=edge->getFlow();
+    }
+
+    std::cout << max_flow << std::endl;
+     */
+}
+
+bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
+    for (auto p : vertexSet) {
+        p.second->setVisited(false);
+    }
+
+    s->setVisited(false);
+
+    std::queue<Vertex<NetworkPoint> *> qu;
+
+    qu.push(s);
+
+    while (!t->isVisited() && !qu.empty()) {
+        auto v = qu.front();
+        qu.pop();
+        for (auto edge : v->getAdj()) {
+            if (!edge->getDest()->isVisited() && (edge->getWeight() - edge->getFlow())) {
+                edge->getDest()->setVisited(true);
+                edge->getDest()->setPath(edge);
+                qu.push(edge->getDest());
+            }
+        }
+
+        for (auto edge : v->getIncoming()) {
+            if (!edge->getOrig()->isVisited() && edge->getFlow()) {
+                edge->getOrig()->setVisited(true);
+                edge->getOrig()->setPath(edge);
+                qu.push(edge->getOrig());
+            }
+        }
+    }
+    return t->isVisited();
+}
+
+unsigned int Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
+    unsigned int min_residual = UINTMAX_MAX;
+    for (auto current_vertex = t; current_vertex != s;) {
+        auto edge = current_vertex->getPath();
+        if (edge->getDest() == current_vertex) {
+            min_residual = std::min((double)min_residual, edge->getWeight() - edge->getFlow());
+            current_vertex = edge->getOrig();
+        } else {
+            min_residual = std::min((double)min_residual, edge->getFlow());
+            current_vertex = edge->getDest();
+        }
+    }
+    return min_residual;
+}
+
+void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f) {
+    for (auto current_vertex = t; current_vertex != s;) {
+        auto edge = current_vertex->getPath();
+        unsigned int current_flow = edge->getFlow();
+        if (edge->getDest() == current_vertex) {
+            edge->setFlow(current_flow + f);
+            current_vertex = edge->getOrig();
+        } else {
+            edge->setFlow(current_flow - f);
+            current_vertex = edge->getDest();
+        }
+    }
+}
+
+void Graph::addSuperSource() {
+    std::vector<Vertex<NetworkPoint> *> sources;
+    for (const auto &p : vertexSet) {
+        auto v = p.second;
+        if (v->getInfo().getPointType() == "reservoir") {
+            sources.push_back(v);
+        }
+    }
+    NetworkPoint s("source");
+
+    addVertex(s);
+
+    for (const auto &v : sources) {
+        addEdge(s, v->getInfo(), DBL_MAX);
+    }
+}
+
+void Graph::addSuperSourceAndSink() {
+    std::vector<Vertex<NetworkPoint> *> sources;
+    std::vector<Vertex<NetworkPoint> *> sinks;
+    for (const auto &p : vertexSet) {
+        auto v = p.second;
+        if (v->getInfo().getPointType() == "reservoir") {
+            sources.push_back(v);
+        }
+        else if (v->getInfo().getPointType() == "city") {
+            sinks.push_back(v);
+        }
+    }
+    NetworkPoint ss("source");
+    NetworkPoint sss("sink");
+    addVertex(ss);
+    addVertex(sss);
+
+    for (const auto &v : sources) {
+        addEdge(ss, v->getInfo(), DBL_MAX);
+    }
+    for (const auto &v : sinks) {
+        addEdge(v->getInfo(), sss, DBL_MAX);
+    }
+}
+
+void Graph::getMaxFlow(NetworkPoint city) {
+    if (!maxFlowRan) {
+        calculateMaxFlowForAll();
+        maxFlowRan = true;
+    }
+
+    auto sink = findVertex(city);
+
+    unsigned max_flow = 0;
+    for (auto e : sink->getAdj()) {
+        if (e->getDest()->getInfo().getCode() == "sink") {
+            max_flow = e->getFlow();
+        }
+    }
+
+    std::cout << max_flow << std::endl;
+}
+
