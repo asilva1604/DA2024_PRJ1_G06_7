@@ -35,8 +35,14 @@ Application::Application() {
         }
     }
 
-    network_.edmondsKarp(NetworkPoint("source"), NetworkPoint("sink"));
-
+    network_.edmondsKarp(NetworkPoint("source"), NetworkPoint("C_10"));
+    for (auto v : network_.getVertexSet()) {
+        std::cout << v.second->getInfo().getCode() << std::endl;
+        for (auto e : v.second->getAdj()) {
+            std::cout << e->getFlow() << "||" << e->getWeight() << std::endl;
+        }
+        std::cout << std::endl;
+    }
 }
 
 const Graph & Application::getNetwork() const {

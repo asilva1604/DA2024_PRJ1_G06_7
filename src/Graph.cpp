@@ -508,7 +508,7 @@ Graph::~Graph() {
 }
 
 void Graph::edmondsKarp(NetworkPoint source, NetworkPoint target) {
-    //addSuperSourceAndSink();
+    addSuperSourceAndSink();
 
     auto s = findVertex(source);
     auto t = findVertex(target);
@@ -604,7 +604,7 @@ void Graph::addSuperSourceAndSink() {
     addVertex(sss);
 
     for (const auto &v : sources) {
-        addEdge(ss, v->getInfo(), UINTMAX_MAX);
+        addEdge(ss, v->getInfo(), v->getInfo().getMaxDelivery());
     }
     for (const auto &v : sinks) {
         addEdge(v->getInfo(), sss, UINTMAX_MAX);
