@@ -35,7 +35,7 @@ Application::Application() {
         }
     }
 
-    network_.edmondsKarp(NetworkPoint("R_1"), NetworkPoint("C_10"));
+    network_.edmondsKarp(NetworkPoint("source"), NetworkPoint("sink"));
 
 }
 
