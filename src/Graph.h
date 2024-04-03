@@ -10,6 +10,7 @@
 #include <queue>
 #include <limits>
 #include <algorithm>
+#include <unordered_map>
 #include <float.h>
 #include "NetworkPoint.h"
 
