@@ -11,6 +11,7 @@
 #include <limits>
 #include <algorithm>
 #include <float.h>
+#include <unordered_map>
 #include "NetworkPoint.h"
 
 template <class T>

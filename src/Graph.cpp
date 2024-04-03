@@ -508,98 +508,101 @@ Graph::~Graph() {
 }
 
 void Graph::calculateMaxFlowForAll() {
+    // First, add super source and super sink
     addSuperSourceAndSink();
 
     auto s = findVertex(NetworkPoint("source"));
     auto t = findVertex(NetworkPoint("sink"));
 
-    if (s == nullptr || t == nullptr || s==t) {
-        std::cout << "Error! Either vertex not found or they are the same";
+    if (s == nullptr || t == nullptr) {
+        std::cout << "nullptr error";
         return;
     }
 
-    //zero the flow
-    for (auto p : vertexSet) {
-        for (auto e : p.second->getAdj()) {
-            e->setFlow(0);
+    // Run Edmonds-Karp algorithm for each sink vertex
+    for (auto& pair : vertexSet) {
+        Vertex<NetworkPoint>* v = pair.second;
+        if (v->getAdj().empty()) // Skip vertices with no outgoing edges (sources)
+            continue;
+        if (v->getIncoming().empty()) // Skip vertices with no incoming edges (sinks)
+            continue;
+
+        // Run Edmonds-Karp algorithm from super source to current sink vertex
+        findAugPath(s, v);
+        while (findAugPath(s, v)) {
+            unsigned f = findMinimalResidualAlongPath(s, v);
+            augment(s, v, f);
         }
     }
 
-    while (findAugPath(s, t))  {
-        unsigned fl = findMinimalResidualAlongPath(s, t);
-        augment(s, t, fl);
-    }
-
-    /*
-    unsigned max_flow = 0;
-    for (auto edge : s->getAdj()) {
-        max_flow+=edge->getFlow();
-    }
-
-    std::cout << max_flow << std::endl;
-     */
+    // Mark that max flow calculation has been done
+    maxFlowRan = true;
 }
 
-bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
-    for (auto p : vertexSet) {
-        p.second->setVisited(false);
+
+bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const {
+    // Reset path pointers
+    for (auto& pair : vertexSet) {
+        pair.second->setPath(nullptr);
     }
 
-    s->setVisited(false);
+    // Use BFS to find an augmenting path
+    std::queue<Vertex<NetworkPoint>*> queue;
+    std::unordered_map<Vertex<NetworkPoint>*, bool> visited;
 
-    std::queue<Vertex<NetworkPoint> *> qu;
+    for (auto& pair : vertexSet) {
+        visited[pair.second] = false;
+    }
 
-    qu.push(s);
+    queue.push(s);
+    visited[s] = true;
 
-    while (!t->isVisited() && !qu.empty()) {
-        auto v = qu.front();
-        qu.pop();
-        for (auto edge : v->getAdj()) {
-            if (!edge->getDest()->isVisited() && (edge->getWeight() - edge->getFlow())) {
-                edge->getDest()->setVisited(true);
-                edge->getDest()->setPath(edge);
-                qu.push(edge->getDest());
-            }
-        }
+    while (!queue.empty()) {
+        Vertex<NetworkPoint>* u = queue.front();
+        queue.pop();
 
-        for (auto edge : v->getIncoming()) {
-            if (!edge->getOrig()->isVisited() && edge->getFlow()) {
-                edge->getOrig()->setVisited(true);
-                edge->getOrig()->setPath(edge);
-                qu.push(edge->getOrig());
+        for (Edge<NetworkPoint>* edge : u->getAdj()) {
+            Vertex<NetworkPoint>* v = edge->getDest();
+            if (!visited[v] && edge->getWeight() > 0) {
+                visited[v] = true;
+                v->setPath(edge); // Update the path to vertex v
+                if (v == t)
+                    return true; // Found augmenting path to sink
+                queue.push(v);
             }
         }
     }
-    return t->isVisited();
+
+    // No augmenting path found
+    return false;
 }
 
-unsigned int Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
-    unsigned int min_residual = UINTMAX_MAX;
-    for (auto current_vertex = t; current_vertex != s;) {
-        auto edge = current_vertex->getPath();
-        if (edge->getDest() == current_vertex) {
-            min_residual = std::min((double)min_residual, edge->getWeight() - edge->getFlow());
-            current_vertex = edge->getOrig();
-        } else {
-            min_residual = std::min((double)min_residual, edge->getFlow());
-            current_vertex = edge->getDest();
-        }
+unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const {
+    unsigned minResidual = INF;
+    Edge<NetworkPoint>* edge = p->getPath();
+    while (edge) {
+        if (edge->getWeight() < minResidual)
+            minResidual = edge->getWeight();
+        edge = edge->getOrig()->getPath();
     }
-    return min_residual;
+    return minResidual;
 }
 
 void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f) {
-    for (auto current_vertex = t; current_vertex != s;) {
-        auto edge = current_vertex->getPath();
-        unsigned int current_flow = edge->getFlow();
-        if (edge->getDest() == current_vertex) {
-            edge->setFlow(current_flow + f);
-            current_vertex = edge->getOrig();
-        } else {
-            edge->setFlow(current_flow - f);
-            current_vertex = edge->getDest();
-        }
+    // Backtrack through the path from sink to source and update flow
+    Vertex<NetworkPoint>* current = t;
+    if (current == nullptr) return;
+    Edge<NetworkPoint>* parentEdge = current->getPath();
+    while (parentEdge->getOrig() != s) {
+        parentEdge->setFlow(parentEdge->getFlow() + f); // Increase flow along the forward edge
+        parentEdge->getReverse()->setFlow(parentEdge->getReverse()->getFlow() - f); // Decrease flow along the reverse edge
+        current = parentEdge->getOrig();
+        parentEdge = current->getPath();
     }
+    // Update flow for the edge from super source to the next vertex in the path
+    parentEdge->setFlow(parentEdge->getFlow() + f);
+    // Update flow for the reverse edge
+    parentEdge->getReverse()->setFlow(parentEdge->getReverse()->getFlow() - f);
 }
 
 void Graph::addSuperSource() {
@@ -653,10 +656,9 @@ void Graph::getMaxFlow(NetworkPoint city) {
     auto sink = findVertex(city);
 
     unsigned max_flow = 0;
-    for (auto e : sink->getAdj()) {
-        if (e->getDest()->getInfo().getCode() == "sink") {
-            max_flow = e->getFlow();
-        }
+    for (auto e : sink->getIncoming()) {
+        //std::cout << e->getWeight() << " " << e->getFlow() << std::endl;
+        max_flow+= e->getFlow();
     }
 
     std::cout << max_flow << std::endl;
