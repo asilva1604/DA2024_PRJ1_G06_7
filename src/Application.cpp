@@ -36,6 +36,12 @@ Application::Application() {
     }
 
     network_.getMaxFlow(NetworkPoint("C_10"));
+
+    auto a = network_.findVertex(NetworkPoint("sink"));
+
+    for (const auto &e : a->getIncoming()) {
+        std::cout << e->getOrig()->getInfo().getCode() << " " << e->getDest()->getInfo().getCode() << " " << e->getWeight() << std::endl;
+    }
 }
 
 const Graph & Application::getNetwork() const {
