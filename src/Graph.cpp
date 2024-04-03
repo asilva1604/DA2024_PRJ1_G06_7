@@ -13,7 +13,7 @@ Vertex<T>::Vertex(T in): info(in) {}
  * with a given destination vertex (d) and edge weight (w).
  */
 template <class T>
-Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, unsigned w) {
+Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
     auto newEdge = new Edge<T>(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -154,7 +154,7 @@ Vertex<T> * Edge<T>::getDest() const {
 }
 
 template <class T>
-unsigned Edge<T>::getWeight() const {
+double Edge<T>::getWeight() const {
     return this->weight;
 }
 
@@ -174,7 +174,7 @@ bool Edge<T>::isSelected() const {
 }
 
 template <class T>
-unsigned Edge<T>::getFlow() const {
+double Edge<T>::getFlow() const {
     return flow;
 }
 
@@ -266,7 +266,7 @@ bool Graph::removeVertex(const NetworkPoint &in) {
  * destination vertices and the edge weight (w).
  * Returns true if successful, and false if the source or destination vertex does not exist.
  */
-bool Graph::addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, unsigned w) {
+bool Graph::addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w) {
     auto v1 = findVertex(sourc);
     auto v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
@@ -507,11 +507,11 @@ Graph::~Graph() {
     deleteMatrix(pathMatrix, vertexSet.size());
 }
 
-void Graph::calculateMaxFlowForAll() {
-    addSuperSourceAndSink();
+void Graph::edmondsKarp(NetworkPoint source, NetworkPoint target) {
+    //addSuperSourceAndSink();
 
-    auto s = findVertex(NetworkPoint("source"));
-    auto t = findVertex(NetworkPoint("C_10"));
+    auto s = findVertex(source);
+    auto t = findVertex(target);
 
     if (s == nullptr || t == nullptr || s==t) {
         std::cout << "Error! Either vertex not found or they are the same";
@@ -537,24 +537,19 @@ void Graph::calculateMaxFlowForAll() {
 }
 
 bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
-    for (auto p : vertexSet) {
-        p.second->setVisited(false);
+    for(auto v : vertexSet) {
+        v.second->setVisited(false);
     }
-
     s->setVisited(true);
-
     std::queue<Vertex<NetworkPoint> *> q;
     q.push(s);
-
-    while (!t->isVisited() && !q.empty()) {
+    while( ! q.empty() && ! t->isVisited()) {
         auto v = q.front();
         q.pop();
-
-        for (auto e : v->getAdj()) {
+        for(auto e: v->getAdj()) {
             testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
         }
-
-        for (auto e : v->getIncoming()) {
+        for(auto e: v->getIncoming()) {
             testAndVisit(q, e, e->getOrig(), e->getFlow());
         }
     }
@@ -562,13 +557,14 @@ bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
 }
 
 unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
-    unsigned int f = UINTMAX_MAX;
-    for (auto v = t; v != s;) {
+    double f = INF;
+    for (auto v = t; v != s; ) {
         auto e = v->getPath();
         if (e->getDest() == v) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
-        } else {
+        }
+        else {
             f = std::min(f, e->getFlow());
             v = e->getDest();
         }
@@ -576,10 +572,10 @@ unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<Net
     return f;
 }
 
-void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f) {
+void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f) {
     for (auto v = t; v != s;) {
         auto e = v->getPath();
-        unsigned flow = e->getFlow();
+        double flow = e->getFlow();
         if (e->getDest() == v) {
             e->setFlow(flow + f);
             v = e->getOrig();
@@ -587,23 +583,6 @@ void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f
             e->setFlow(flow - f);
             v = e->getDest();
         }
-    }
-}
-
-void Graph::addSuperSource() {
-    std::vector<Vertex<NetworkPoint> *> sources;
-    for (const auto &p : vertexSet) {
-        auto v = p.second;
-        if (v->getInfo().getPointType() == "reservoir") {
-            sources.push_back(v);
-        }
-    }
-    NetworkPoint s("source");
-
-    addVertex(s);
-
-    for (const auto &v : sources) {
-        addEdge(s, v->getInfo(), DBL_MAX);
     }
 }
 
@@ -632,18 +611,10 @@ void Graph::addSuperSourceAndSink() {
     }
 }
 
-void Graph::getMaxFlow(NetworkPoint city) {
-    if (!maxFlowRan) {
-        calculateMaxFlowForAll();
-        maxFlowRan = true;
-    }
-
-    //auto sink = findVertex(city);
-}
 
 void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w,
-                         unsigned int residual) {
-    if (!w->isVisited() && residual > 0) {
+                         double residual) {
+    if (! w->isVisited() && residual > 0) {
         w->setVisited(true);
         w->setPath(e);
         q.push(w);

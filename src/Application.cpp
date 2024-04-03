@@ -18,7 +18,7 @@ Application::Application() {
     }
 
     for (const auto &v : reservoirs.getData()) {
-        network_.addVertex(NetworkPoint(v.at(0), v.at(1), (unsigned)std::stoi(v.at(2)),
+        network_.addVertex(NetworkPoint(v.at(0), v.at(1), std::stoi(v.at(2)),
             v.at(3), std::stoi(v.at(4))));
     }
 
@@ -35,13 +35,8 @@ Application::Application() {
         }
     }
 
-    network_.getMaxFlow(NetworkPoint("C_10"));
+    network_.edmondsKarp(NetworkPoint("R_1"), NetworkPoint("C_10"));
 
-    auto a = network_.findVertex(NetworkPoint("sink"));
-
-    for (const auto &e : a->getIncoming()) {
-        std::cout << e->getOrig()->getInfo().getCode() << " " << e->getDest()->getInfo().getCode() << " " << e->getWeight() << std::endl;
-    }
 }
 
 const Graph & Application::getNetwork() const {

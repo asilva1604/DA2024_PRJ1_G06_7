@@ -41,7 +41,7 @@ public:
     void setIndegree(unsigned int indegree);
     void setDist(double dist);
     void setPath(Edge<T> *path);
-    Edge<T> * addEdge(Vertex<T> *dest, unsigned w);
+    Edge<T> * addEdge(Vertex<T> *dest, double w);
     bool removeEdge(T in);
     void removeOutgoingEdges();
 
@@ -70,18 +70,18 @@ public:
     Edge(Vertex<T> *orig, Vertex<T> *dest, double w);
 
     Vertex<T> * getDest() const;
-    unsigned getWeight() const;
+    double getWeight() const;
     bool isSelected() const;
     Vertex<T> * getOrig() const;
     Edge<T> *getReverse() const;
-    unsigned getFlow() const;
+    double getFlow() const;
 
     void setSelected(bool selected);
     void setReverse(Edge<T> *reverse);
     void setFlow(double flow);
 protected:
     Vertex<T> * dest; // destination vertex
-    unsigned weight; // edge weight, can also be used for capacity
+    double weight; // edge weight, can also be used for capacity
 
     // auxiliary fields
     bool selected = false;
@@ -90,7 +90,7 @@ protected:
     Vertex<T> *orig;
     Edge<T> *reverse = nullptr;
 
-    unsigned flow; // for flow-related problems
+    double flow; // for flow-related problems
 };
 
 /********************** Graph  ****************************/
@@ -114,7 +114,7 @@ public:
      * destination vertices and the edge weight (w).
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
-    bool addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, unsigned w);
+    bool addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w);
     bool removeEdge(const NetworkPoint &source, const NetworkPoint &dest);
     bool addBidirectionalEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w);
 
@@ -135,28 +135,28 @@ public:
      * @param city
      */
     void getMaxFlow(NetworkPoint city);
+    void edmondsKarp(NetworkPoint source, NetworkPoint target);
 
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
     unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;
     bool findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) ;
-    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f);
+    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f);
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
     void addSuperSourceAndSink();
-    void addSuperSource();
 
     /**
      * should only run once, is supposed to calculate max flow to all cities, which are the sinks
      */
-    void calculateMaxFlowForAll();
+
 
     /**
      * serves to store if the maximum flow edmond karps algorithm has already been ran
      */
     bool maxFlowRan = false;
 
-    void testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w, unsigned residual);
+    void testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w, double residual);
 };
 
 void deleteMatrix(int **m, int n);
