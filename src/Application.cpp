@@ -36,6 +36,7 @@ Application::Application() {
     }
 
     network_.getMaxFlow(NetworkPoint("C_9"));
+    network_.checkWaterSupply();
 }
 
 const Graph & Application::getNetwork() const {

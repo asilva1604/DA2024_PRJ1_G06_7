@@ -136,6 +136,8 @@ public:
      */
     void getMaxFlow(NetworkPoint city);
 
+    void checkWaterSupply();
+
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
     unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;

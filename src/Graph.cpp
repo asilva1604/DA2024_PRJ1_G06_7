@@ -6,14 +6,15 @@
 
 /************************* Vertex  **************************/
 
-template <class T>
+template<class T>
 Vertex<T>::Vertex(T in): info(in) {}
+
 /*
  * Auxiliary function to add an outgoing edge to a vertex (this),
  * with a given destination vertex (d) and edge weight (w).
  */
-template <class T>
-Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
+template<class T>
+Edge<T> *Vertex<T>::addEdge(Vertex<T> *d, double w) {
     auto newEdge = new Edge<T>(this, d, w);
     adj.push_back(newEdge);
     d->incoming.push_back(newEdge);
@@ -25,7 +26,7 @@ Edge<T> * Vertex<T>::addEdge(Vertex<T> *d, double w) {
  * from a vertex (this).
  * Returns true if successful, and false if such edge does not exist.
  */
-template <class T>
+template<class T>
 bool Vertex<T>::removeEdge(T in) {
     bool removedEdge = false;
     auto it = adj.begin();
@@ -36,8 +37,7 @@ bool Vertex<T>::removeEdge(T in) {
             it = adj.erase(it);
             deleteEdge(edge);
             removedEdge = true; // allows for multiple edges to connect the same pair of vertices (multigraph)
-        }
-        else {
+        } else {
             it++;
         }
     }
@@ -47,7 +47,7 @@ bool Vertex<T>::removeEdge(T in) {
 /*
  * Auxiliary function to remove an outgoing edge of a vertex.
  */
-template <class T>
+template<class T>
 void Vertex<T>::removeOutgoingEdges() {
     auto it = adj.begin();
     while (it != adj.end()) {
@@ -57,77 +57,77 @@ void Vertex<T>::removeOutgoingEdges() {
     }
 }
 
-template <class T>
+template<class T>
 T Vertex<T>::getInfo() const {
     return this->info;
 }
 
-template <class T>
-std::vector<Edge<T>*> Vertex<T>::getAdj() const {
+template<class T>
+std::vector<Edge<T> *> Vertex<T>::getAdj() const {
     return this->adj;
 }
 
-template <class T>
+template<class T>
 bool Vertex<T>::isVisited() const {
     return this->visited;
 }
 
-template <class T>
+template<class T>
 bool Vertex<T>::isProcessing() const {
     return this->processing;
 }
 
-template <class T>
+template<class T>
 unsigned int Vertex<T>::getIndegree() const {
     return this->indegree;
 }
 
-template <class T>
+template<class T>
 double Vertex<T>::getDist() const {
     return this->dist;
 }
 
-template <class T>
+template<class T>
 Edge<T> *Vertex<T>::getPath() const {
     return this->path;
 }
 
-template <class T>
+template<class T>
 std::vector<Edge<T> *> Vertex<T>::getIncoming() const {
     return this->incoming;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setInfo(T in) {
     this->info = in;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setVisited(bool visited) {
     this->visited = visited;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setProcesssing(bool processing) {
     this->processing = processing;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setIndegree(unsigned int indegree) {
     this->indegree = indegree;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setDist(double dist) {
     this->dist = dist;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::setPath(Edge<T> *path) {
     this->path = path;
 }
 
-template <class T>
+template<class T>
 void Vertex<T>::deleteEdge(Edge<T> *edge) {
     Vertex<T> *dest = edge->getDest();
     // Remove the corresponding edge from the incoming list
@@ -135,8 +135,7 @@ void Vertex<T>::deleteEdge(Edge<T> *edge) {
     while (it != dest->incoming.end()) {
         if ((*it)->getOrig()->getInfo() == info) {
             it = dest->incoming.erase(it);
-        }
-        else {
+        } else {
             it++;
         }
     }
@@ -145,50 +144,50 @@ void Vertex<T>::deleteEdge(Edge<T> *edge) {
 
 /********************** Edge  ****************************/
 
-template <class T>
+template<class T>
 Edge<T>::Edge(Vertex<T> *orig, Vertex<T> *dest, double w): orig(orig), dest(dest), weight(w) {}
 
-template <class T>
-Vertex<T> * Edge<T>::getDest() const {
+template<class T>
+Vertex<T> *Edge<T>::getDest() const {
     return this->dest;
 }
 
-template <class T>
+template<class T>
 double Edge<T>::getWeight() const {
     return this->weight;
 }
 
-template <class T>
-Vertex<T> * Edge<T>::getOrig() const {
+template<class T>
+Vertex<T> *Edge<T>::getOrig() const {
     return this->orig;
 }
 
-template <class T>
+template<class T>
 Edge<T> *Edge<T>::getReverse() const {
     return this->reverse;
 }
 
-template <class T>
+template<class T>
 bool Edge<T>::isSelected() const {
     return this->selected;
 }
 
-template <class T>
+template<class T>
 double Edge<T>::getFlow() const {
     return flow;
 }
 
-template <class T>
+template<class T>
 void Edge<T>::setSelected(bool selected) {
     this->selected = selected;
 }
 
-template <class T>
+template<class T>
 void Edge<T>::setReverse(Edge<T> *reverse) {
     this->reverse = reverse;
 }
 
-template <class T>
+template<class T>
 void Edge<T>::setFlow(double flow) {
     this->flow = flow;
 }
@@ -206,7 +205,7 @@ std::unordered_map<std::string, Vertex<NetworkPoint> *> Graph::getVertexSet() co
 /*
  * Auxiliary function to find a vertex with a given content.
  */
-Vertex<NetworkPoint> * Graph::findVertex(const NetworkPoint &in) const {
+Vertex<NetworkPoint> *Graph::findVertex(const NetworkPoint &in) const {
     auto a = vertexSet.find(in.getCode());
     if (a != vertexSet.end()) return a->second;
     return nullptr;
@@ -281,7 +280,7 @@ bool Graph::addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double 
  * Returns true if successful, and false if such edge does not exist.
  */
 bool Graph::removeEdge(const NetworkPoint &sourc, const NetworkPoint &dest) {
-    Vertex<NetworkPoint> * srcVertex = findVertex(sourc);
+    Vertex<NetworkPoint> *srcVertex = findVertex(sourc);
     if (srcVertex == nullptr) {
         return false;
     }
@@ -308,9 +307,9 @@ bool Graph::addBidirectionalEdge(const NetworkPoint &sourc, const NetworkPoint &
  */
 std::vector<NetworkPoint> Graph::dfs() const {
     std::vector<NetworkPoint> res;
-    for (auto v : vertexSet)
+    for (auto v: vertexSet)
         v.second->setVisited(false);
-    for (auto v : vertexSet)
+    for (auto v: vertexSet)
         if (!v.second->isVisited())
             dfsVisit(v.second, res);
     return res;
@@ -320,7 +319,7 @@ std::vector<NetworkPoint> Graph::dfs() const {
  * Performs a depth-first search (dfs) in a graph (this) from the source node.
  * Returns a vector with the contents of the vertices by dfs order.
  */
-std::vector<NetworkPoint> Graph::dfs(const NetworkPoint & source) const {
+std::vector<NetworkPoint> Graph::dfs(const NetworkPoint &source) const {
     std::vector<NetworkPoint> res;
     // Get the source vertex
     auto s = findVertex(source);
@@ -328,7 +327,7 @@ std::vector<NetworkPoint> Graph::dfs(const NetworkPoint & source) const {
         return res;
     }
     // Set that no vertex has been visited yet
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v.second->setVisited(false);
     }
     // Perform the actual DFS using recursion
@@ -341,10 +340,10 @@ std::vector<NetworkPoint> Graph::dfs(const NetworkPoint & source) const {
  * Auxiliary function that visits a vertex (v) and its adjacent, recursively.
  * Updates a parameter with the list of visited node contents.
  */
-void Graph::dfsVisit(Vertex<NetworkPoint> *v, std::vector<NetworkPoint> & res) const {
+void Graph::dfsVisit(Vertex<NetworkPoint> *v, std::vector<NetworkPoint> &res) const {
     v->setVisited(true);
     res.push_back(v->getInfo());
-    for (auto & e : v->getAdj()) {
+    for (auto &e: v->getAdj()) {
         auto w = e->getDest();
         if (!w->isVisited()) {
             dfsVisit(w, res);
@@ -358,7 +357,7 @@ void Graph::dfsVisit(Vertex<NetworkPoint> *v, std::vector<NetworkPoint> & res) c
  * from the vertex with the given source contents (source).
  * Returns a vector with the contents of the vertices by bfs order.
  */
-std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
+std::vector<NetworkPoint> Graph::bfs(const NetworkPoint &source) const {
     std::vector<NetworkPoint> res;
     // Get the source vertex
     auto s = findVertex(source);
@@ -367,7 +366,7 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
     }
 
     // Set that no vertex has been visited yet
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v.second->setVisited(false);
     }
 
@@ -379,9 +378,9 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
         auto v = q.front();
         q.pop();
         res.push_back(v->getInfo());
-        for (auto & e : v->getAdj()) {
+        for (auto &e: v->getAdj()) {
             auto w = e->getDest();
-            if ( ! w->isVisited()) {
+            if (!w->isVisited()) {
                 q.push(w);
                 w->setVisited(true);
             }
@@ -400,13 +399,13 @@ std::vector<NetworkPoint> Graph::bfs(const NetworkPoint & source) const {
  */
 
 bool Graph::isDAG() const {
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v.second->setVisited(false);
         v.second->setProcesssing(false);
     }
-    for (auto v : vertexSet) {
-        if (! v.second->isVisited()) {
-            if ( ! dfsIsDAG(v.second) ) return false;
+    for (auto v: vertexSet) {
+        if (!v.second->isVisited()) {
+            if (!dfsIsDAG(v.second)) return false;
         }
     }
     return true;
@@ -419,11 +418,11 @@ bool Graph::isDAG() const {
 bool Graph::dfsIsDAG(Vertex<NetworkPoint> *v) const {
     v->setVisited(true);
     v->setProcesssing(true);
-    for (auto e : v->getAdj()) {
+    for (auto e: v->getAdj()) {
         auto w = e->getDest();
         if (w->isProcessing()) return false;
-        if (! w->isVisited()) {
-            if (! dfsIsDAG(w)) return false;
+        if (!w->isVisited()) {
+            if (!dfsIsDAG(w)) return false;
         }
     }
     v->setProcesssing(false);
@@ -441,37 +440,37 @@ bool Graph::dfsIsDAG(Vertex<NetworkPoint> *v) const {
 std::vector<NetworkPoint> Graph::topsort() const {
     std::vector<NetworkPoint> res;
 
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v.second->setIndegree(0);
     }
-    for (auto v : vertexSet) {
-        for (auto e : v.second->getAdj()) {
+    for (auto v: vertexSet) {
+        for (auto e: v.second->getAdj()) {
             unsigned int indegree = e->getDest()->getIndegree();
             e->getDest()->setIndegree(indegree + 1);
         }
     }
 
     std::queue<Vertex<NetworkPoint> *> q;
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         if (v.second->getIndegree() == 0) {
             q.push(v.second);
         }
     }
 
-    while( !q.empty() ) {
-        Vertex<NetworkPoint> * v = q.front();
+    while (!q.empty()) {
+        Vertex<NetworkPoint> *v = q.front();
         q.pop();
         res.push_back(v->getInfo());
-        for(auto e : v->getAdj()) {
+        for (auto e: v->getAdj()) {
             auto w = e->getDest();
             w->setIndegree(w->getIndegree() - 1);
-            if(w->getIndegree() == 0) {
+            if (w->getIndegree() == 0) {
                 q.push(w);
             }
         }
     }
 
-    if ( res.size() != vertexSet.size() ) {
+    if (res.size() != vertexSet.size()) {
         //std::cout << "Impossible topological ordering!" << std::endl;
         res.clear();
         return res;
@@ -484,8 +483,8 @@ inline void deleteMatrix(int **m, int n) {
     if (m != nullptr) {
         for (int i = 0; i < n; i++)
             if (m[i] != nullptr)
-                delete [] m[i];
-        delete [] m;
+                delete[] m[i];
+        delete[] m;
     }
 }
 
@@ -493,8 +492,8 @@ inline void deleteMatrix(double **m, int n) {
     if (m != nullptr) {
         for (int i = 0; i < n; i++)
             if (m[i] != nullptr)
-                delete [] m[i];
-        delete [] m;
+                delete[] m[i];
+        delete[] m;
     }
 }
 
@@ -509,19 +508,19 @@ void Graph::edmondsKarp() {
     auto s = findVertex(NetworkPoint("source"));
     auto t = findVertex(NetworkPoint("sink"));
 
-    if (s == nullptr || t == nullptr || s==t) {
+    if (s == nullptr || t == nullptr || s == t) {
         std::cout << "Error! Either vertex not found or they are the same";
         return;
     }
 
     //zero the flow
-    for (auto p : vertexSet) {
-        for (auto e : p.second->getAdj()) {
+    for (auto p: vertexSet) {
+        for (auto e: p.second->getAdj()) {
             e->setFlow(0);
         }
     }
 
-    while (findAugPath(s, t))  {
+    while (findAugPath(s, t)) {
         unsigned f = findMinimalResidualAlongPath(s, t);
         augment(s, t, f);
     }
@@ -530,34 +529,33 @@ void Graph::edmondsKarp() {
 }
 
 bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
-    for(auto v : vertexSet) {
+    for (auto v: vertexSet) {
         v.second->setVisited(false);
     }
     s->setVisited(true);
     std::queue<Vertex<NetworkPoint> *> q;
     q.push(s);
-    while( ! q.empty() && ! t->isVisited()) {
+    while (!q.empty() && !t->isVisited()) {
         auto v = q.front();
         q.pop();
-        for(auto e: v->getAdj()) {
+        for (auto e: v->getAdj()) {
             testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
         }
-        for(auto e: v->getIncoming()) {
+        for (auto e: v->getIncoming()) {
             testAndVisit(q, e, e->getOrig(), e->getFlow());
         }
     }
     return t->isVisited();
 }
 
-unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const{
+unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const {
     double f = INF;
-    for (auto v = t; v != s; ) {
+    for (auto v = t; v != s;) {
         auto e = v->getPath();
         if (e->getDest() == v) {
             f = std::min(f, e->getWeight() - e->getFlow());
             v = e->getOrig();
-        }
-        else {
+        } else {
             f = std::min(f, e->getFlow());
             v = e->getDest();
         }
@@ -582,12 +580,11 @@ void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f) 
 void Graph::addSuperSourceAndSink() {
     std::vector<Vertex<NetworkPoint> *> sources;
     std::vector<Vertex<NetworkPoint> *> sinks;
-    for (const auto &p : vertexSet) {
+    for (const auto &p: vertexSet) {
         auto v = p.second;
         if (v->getInfo().getPointType() == "reservoir") {
             sources.push_back(v);
-        }
-        else if (v->getInfo().getPointType() == "city") {
+        } else if (v->getInfo().getPointType() == "city") {
             sinks.push_back(v);
         }
     }
@@ -596,10 +593,10 @@ void Graph::addSuperSourceAndSink() {
     addVertex(ss);
     addVertex(sss);
 
-    for (const auto &v : sources) {
+    for (const auto &v: sources) {
         addEdge(ss, v->getInfo(), v->getInfo().getMaxDelivery());
     }
-    for (const auto &v : sinks) {
+    for (const auto &v: sinks) {
         addEdge(v->getInfo(), sss, v->getInfo().getDemand());
     }
 }
@@ -607,7 +604,7 @@ void Graph::addSuperSourceAndSink() {
 
 void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w,
                          double residual) {
-    if (! w->isVisited() && residual > 0) {
+    if (!w->isVisited() && residual > 0) {
         w->setVisited(true);
         w->setPath(e);
         q.push(w);
@@ -624,10 +621,45 @@ void Graph::getMaxFlow(NetworkPoint city) {
         return;
     }
     double maxFlow = 0;
-    for (auto e : v->getIncoming()) {
+    for (auto e: v->getIncoming()) {
         maxFlow += e->getFlow();
     }
     std::cout << "Max flow to city " << city.getCode() << " is " << maxFlow << std::endl;
+
+}
+
+void Graph::checkWaterSupply() {
+    //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
+
+    if (!maxFlowRan) edmondsKarp();
+
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        if (v->getInfo().getPointType() == "city") {
+            auto demand = v->getInfo().getDemand();
+            auto maxFlow = 0;
+
+            // sum up maximum flow from incoming edges
+            for (auto &e: v->getIncoming())
+                maxFlow += e->getFlow();
+
+            if (maxFlow < demand) {
+                // cities that cannot be supplied by the desired water rate level
+                std::cout << "City: " << v->getInfo().getCode() << ", Deficit: " << (demand - maxFlow) << std::endl;
+            }
+        }
+    }
+
+    /*
+    std::cout << "Total Demand: " << totalDemand << " m3/s" << std::endl;
+    std::cout << "Total Water Supplied: " << totalWaterSupplied << " m3/s" << std::endl;
+
+    if (totalDemand > totalWaterSupplied)
+        std::cout << "The network cannot meet the water needs!" << std::endl;
+    else
+        std::cout << "The network can meet the water needs!" << std::endl;
+    */
 
 }
 
