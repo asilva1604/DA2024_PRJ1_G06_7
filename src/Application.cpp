@@ -18,7 +18,7 @@ Application::Application() {
     }
 
     for (const auto &v : reservoirs.getData()) {
-        network_.addVertex(NetworkPoint(v.at(0), v.at(1), (unsigned)std::stoi(v.at(2)),
+        network_.addVertex(NetworkPoint(v.at(0), v.at(1), std::stoi(v.at(2)),
             v.at(3), std::stoi(v.at(4))));
     }
 
@@ -35,7 +35,7 @@ Application::Application() {
         }
     }
 
-    network_.getMaxFlow(NetworkPoint("C_10"));
+    network_.getMaxFlow(NetworkPoint("C_9"));
 }
 
 const Graph & Application::getNetwork() const {

@@ -138,25 +138,25 @@ public:
 
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
-    //TODO REWRITE THIS
     unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;
-    //TODO REWRITE THIS
-    bool findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const;
-    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, unsigned f);
+    bool findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) ;
+    void augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f);
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
     void addSuperSourceAndSink();
-    void addSuperSource();
 
     /**
      * should only run once, is supposed to calculate max flow to all cities, which are the sinks
      */
-    void calculateMaxFlowForAll();
+
 
     /**
      * serves to store if the maximum flow edmond karps algorithm has already been ran
      */
     bool maxFlowRan = false;
+
+    void testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w, double residual);
+    void edmondsKarp();
 };
 
 void deleteMatrix(int **m, int n);
