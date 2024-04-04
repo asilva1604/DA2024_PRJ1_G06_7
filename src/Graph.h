@@ -135,7 +135,6 @@ public:
      * @param city
      */
     void getMaxFlow(NetworkPoint city);
-    void edmondsKarp(NetworkPoint source, NetworkPoint target);
 
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
@@ -157,6 +156,7 @@ protected:
     bool maxFlowRan = false;
 
     void testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w, double residual);
+    void edmondsKarp();
 };
 
 void deleteMatrix(int **m, int n);

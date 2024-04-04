@@ -507,11 +507,11 @@ Graph::~Graph() {
     deleteMatrix(pathMatrix, vertexSet.size());
 }
 
-void Graph::edmondsKarp(NetworkPoint source, NetworkPoint target) {
+void Graph::edmondsKarp() {
     addSuperSourceAndSink();
 
-    auto s = findVertex(source);
-    auto t = findVertex(target);
+    auto s = findVertex(NetworkPoint("source"));
+    auto t = findVertex(NetworkPoint("sink"));
 
     if (s == nullptr || t == nullptr || s==t) {
         std::cout << "Error! Either vertex not found or they are the same";
@@ -530,10 +530,7 @@ void Graph::edmondsKarp(NetworkPoint source, NetworkPoint target) {
         augment(s, t, f);
     }
 
-    for (const auto &e : t->getIncoming()) {
-        std::cout << e->getFlow() << std::endl;
-    }
-
+    maxFlowRan = true;
 }
 
 bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
@@ -607,7 +604,7 @@ void Graph::addSuperSourceAndSink() {
         addEdge(ss, v->getInfo(), v->getInfo().getMaxDelivery());
     }
     for (const auto &v : sinks) {
-        addEdge(v->getInfo(), sss, UINTMAX_MAX);
+        addEdge(v->getInfo(), sss, v->getInfo().getDemand());
     }
 }
 
@@ -619,5 +616,22 @@ void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoin
         w->setPath(e);
         q.push(w);
     }
+}
+
+void Graph::getMaxFlow(NetworkPoint city) {
+    if (!maxFlowRan) {
+        edmondsKarp();
+    }
+    auto v = findVertex(city);
+    if (v == nullptr) {
+        std::cout << "City not found!" << std::endl;
+        return;
+    }
+    double maxFlow = 0;
+    for (auto e : v->getIncoming()) {
+        maxFlow += e->getFlow();
+    }
+    std::cout << "Max flow to city " << city.getCode() << " is " << maxFlow << std::endl;
+
 }
 
