@@ -36,6 +36,7 @@ Application::Application() {
     }
 
     network_.getMaxFlow(NetworkPoint("C_2"));
+    
 }
 
 const Graph & Application::getNetwork() const {
