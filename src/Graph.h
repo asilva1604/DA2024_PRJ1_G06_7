@@ -136,6 +136,14 @@ public:
      */
     void getMaxFlow(NetworkPoint city);
 
+    std::vector<double> calculateMetrics();
+
+    void balanceLoad(double averageDifference);
+
+    void printMetrics(std::vector<double> metric);
+
+    Graph * copyGraph();
+
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
     unsigned findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *p) const;

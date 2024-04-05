@@ -36,6 +36,24 @@ Application::Application() {
     }
 
     network_.getMaxFlow(NetworkPoint("C_9"));
+
+    // calculate initial metrics
+    std::vector<double> initialMetrics = network_.calculateMetrics();
+    // PRINT METRICS
+    std::cout <<std::endl;
+    std::cout << "| Initial Metrics |" << std::endl;
+    network_.printMetrics(initialMetrics);
+
+    // balance load
+    double averageDifference = initialMetrics.at(0);
+    network_.balanceLoad(averageDifference);
+
+    // calculate final metrics
+    std::vector<double> finalMetrics = network_.calculateMetrics();
+    // PRINT METRICS
+    std::cout << "| Metrics after Load Balancing |" << std::endl;
+    network_.printMetrics(finalMetrics);
+
 }
 
 const Graph & Application::getNetwork() const {
