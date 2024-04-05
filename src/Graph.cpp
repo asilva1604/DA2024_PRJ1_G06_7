@@ -629,10 +629,10 @@ void Graph::getMaxFlow(NetworkPoint city) {
 
 }
 
-std::vector<std::pair<std::string, double>> Graph::checkWaterSupply() {
+std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWaterSupply() {
     //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
 
-    std::vector<std::pair<std::string, double>> result;
+    std::vector<std::pair<std::string, std::pair<double, double>>> result;
 
     if (!maxFlowRan) edmondsKarp();
 
@@ -649,13 +649,24 @@ std::vector<std::pair<std::string, double>> Graph::checkWaterSupply() {
 
             if (maxFlow < demand) {
                 // cities that cannot be supplied by the desired water rate level
-                result.emplace_back(v->getInfo().getCode(), (demand - maxFlow));
+                result.emplace_back(v->getInfo().getCode(), std::make_pair(demand, maxFlow));
                 //std::cout << "City: " << v->getInfo().getCode() << ", Deficit: " << (demand - maxFlow) << std::endl;
             }
         }
     }
 
     return result;
+}
+
+void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
+    if(!supply.empty()) {
+        for (const auto &s: supply) {
+            std::cout << "City: " << s.first << std::endl;
+            std::cout << " - Demand: " << s.second.first << std::endl;
+            std::cout << " - Actual Flow: " << s.second.second << std::endl;
+            std::cout << " - Deficit: " << (s.second.first - s.second.second) << std::endl << std::endl;
+        }
+    }
 }
 
 std::vector<double> Graph::calculateMetrics() {
@@ -726,7 +737,7 @@ void Graph::printMetrics(std::vector<double> metric) {
     std::cout << "Max Difference: " << metric.at(3) << std::endl << std::endl;
 }
 
-Graph * Graph::copyGraph() {
+Graph *Graph::copyGraph() {
     Graph *newGraph = new Graph();
 
     // Copy vertices
@@ -740,7 +751,7 @@ Graph * Graph::copyGraph() {
     for (const auto &p: vertexSet) {
         auto v = p.second;
 
-        for(auto e : v->getAdj()) {
+        for (auto e: v->getAdj()) {
             auto src = e->getOrig()->getInfo();
             auto dest = e->getDest()->getInfo();
 

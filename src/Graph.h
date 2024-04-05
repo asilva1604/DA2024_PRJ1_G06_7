@@ -136,7 +136,9 @@ public:
      */
     void getMaxFlow(NetworkPoint city);
 
-    std::vector<std::pair<std::string, double>> checkWaterSupply();
+    std::vector<std::pair<std::string, std::pair<double, double>>> checkWaterSupply();
+
+    void printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
   
     std::vector<double> calculateMetrics();
 
