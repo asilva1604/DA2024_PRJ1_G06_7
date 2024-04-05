@@ -626,6 +626,7 @@ void Graph::getMaxFlow(NetworkPoint city) {
         maxFlow += e->getFlow();
     }
     std::cout << "Max flow to city " << city.getCode() << " is " << maxFlow << std::endl;
+
 }
 
 std::vector<double> Graph::calculateMetrics() {
@@ -696,4 +697,29 @@ void Graph::printMetrics(std::vector<double> metric) {
     std::cout << "Variance: " << metric.at(1) << std::endl;
     std::cout << "Standard Deviation: " << metric.at(2) << std::endl;
     std::cout << "Max Difference: " << metric.at(3) << std::endl << std::endl;
+}
+
+Graph * Graph::copyGraph() {
+    Graph *newGraph = new Graph();
+
+    // Copy vertices
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        newGraph->addVertex(v->getInfo());
+    }
+
+    // Copy edges
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        for(auto e : v->getAdj()) {
+            auto src = e->getOrig()->getInfo();
+            auto dest = e->getDest()->getInfo();
+
+            newGraph->addEdge(src, dest, e->getWeight());
+        }
+    }
+    newGraph->updateAllVerticesFlow();
+    return newGraph;
 }
