@@ -40,7 +40,8 @@ Application::Application() {
     // calculate initial metrics
     std::vector<double> initialMetrics = network_.calculateMetrics();
     // PRINT METRICS
-    std::cout << "Initial Metrics" << std::endl;
+    std::cout <<std::endl;
+    std::cout << "| Initial Metrics |" << std::endl;
     network_.printMetrics(initialMetrics);
 
     // balance load
@@ -50,7 +51,7 @@ Application::Application() {
     // calculate final metrics
     std::vector<double> finalMetrics = network_.calculateMetrics();
     // PRINT METRICS
-    std::cout << "Metrics after Load Balancing" << std::endl;
+    std::cout << "| Metrics after Load Balancing |" << std::endl;
     network_.printMetrics(finalMetrics);
 
 }

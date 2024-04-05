@@ -670,8 +670,6 @@ std::vector<double> Graph::calculateMetrics() {
     return results;
 }
 
-// não sei se funciona
-
 void Graph::balanceLoad(double averageDifference) {
     // load balancing heuristic
     for (const auto &p: vertexSet) {
