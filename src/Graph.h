@@ -136,7 +136,7 @@ public:
      */
     void getMaxFlow(NetworkPoint city);
 
-    void checkWaterSupply();
+    std::vector<std::pair<std::string, double>> checkWaterSupply();
 
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set

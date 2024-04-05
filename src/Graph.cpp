@@ -628,8 +628,10 @@ void Graph::getMaxFlow(NetworkPoint city) {
 
 }
 
-void Graph::checkWaterSupply() {
+std::vector<std::pair<std::string, double>> Graph::checkWaterSupply() {
     //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
+
+    std::vector<std::pair<std::string, double>> result;
 
     if (!maxFlowRan) edmondsKarp();
 
@@ -638,7 +640,7 @@ void Graph::checkWaterSupply() {
 
         if (v->getInfo().getPointType() == "city") {
             auto demand = v->getInfo().getDemand();
-            auto maxFlow = 0;
+            double maxFlow = 0.0;
 
             // sum up maximum flow from incoming edges
             for (auto &e: v->getIncoming())
@@ -646,20 +648,12 @@ void Graph::checkWaterSupply() {
 
             if (maxFlow < demand) {
                 // cities that cannot be supplied by the desired water rate level
-                std::cout << "City: " << v->getInfo().getCode() << ", Deficit: " << (demand - maxFlow) << std::endl;
+                result.emplace_back(v->getInfo().getCode(), (demand - maxFlow));
+                //std::cout << "City: " << v->getInfo().getCode() << ", Deficit: " << (demand - maxFlow) << std::endl;
             }
         }
     }
 
-    /*
-    std::cout << "Total Demand: " << totalDemand << " m3/s" << std::endl;
-    std::cout << "Total Water Supplied: " << totalWaterSupplied << " m3/s" << std::endl;
-
-    if (totalDemand > totalWaterSupplied)
-        std::cout << "The network cannot meet the water needs!" << std::endl;
-    else
-        std::cout << "The network can meet the water needs!" << std::endl;
-    */
-
+    return result;
 }
 
