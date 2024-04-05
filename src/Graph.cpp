@@ -2,6 +2,7 @@
 // Created by alexandre on 07-03-2024.
 //
 
+#include <valarray>
 #include "Graph.h"
 
 /************************* Vertex  **************************/
@@ -657,3 +658,95 @@ std::vector<std::pair<std::string, double>> Graph::checkWaterSupply() {
     return result;
 }
 
+std::vector<double> Graph::calculateMetrics() {
+    std::vector<double> results;
+    std::vector<double> differences;
+    double sumDifferences = 0.0;
+    double maxDifference = std::numeric_limits<double>::min();
+
+    // differences
+    for (const auto &p: vertexSet) {
+        auto outgoingEdges = p.second->getAdj();
+
+        for (auto e: outgoingEdges) {
+            double difference = e->getWeight() - e->getFlow();
+            differences.push_back(difference);
+            sumDifferences += difference;
+
+            if (difference > maxDifference)
+                maxDifference = difference;
+        }
+    }
+
+    // average difference
+    double averageDifference = sumDifferences / (double) differences.size();
+    results.push_back(averageDifference);
+
+    // variance
+    double variance = 0.0;
+    for (auto difference: differences)
+        variance += pow(difference - averageDifference, 2);
+    variance /= (double) differences.size();
+    results.push_back(variance);
+
+    // standard deviation
+    double standardDeviation;
+    standardDeviation = sqrt(variance);
+    results.push_back(standardDeviation);
+
+    results.push_back(maxDifference);
+
+    return results;
+}
+
+void Graph::balanceLoad(double averageDifference) {
+    // load balancing heuristic
+    for (const auto &p: vertexSet) {
+        auto outgoingEdges = p.second->getAdj();
+
+        for (auto e: outgoingEdges) {
+            double difference = e->getWeight() - e->getFlow();
+
+            if (difference > averageDifference) { // redistribute flow
+                double targetFlow = e->getFlow() + (difference - averageDifference);
+
+                if (targetFlow > e->getWeight())
+                    // limit target flow to the capacity of the pipe
+                    targetFlow = e->getWeight();
+                e->setFlow(targetFlow);
+            }
+        }
+    }
+}
+
+void Graph::printMetrics(std::vector<double> metric) {
+    std::cout << "Average Difference: " << metric.at(0) << std::endl;
+    std::cout << "Variance: " << metric.at(1) << std::endl;
+    std::cout << "Standard Deviation: " << metric.at(2) << std::endl;
+    std::cout << "Max Difference: " << metric.at(3) << std::endl << std::endl;
+}
+
+Graph * Graph::copyGraph() {
+    Graph *newGraph = new Graph();
+
+    // Copy vertices
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        newGraph->addVertex(v->getInfo());
+    }
+
+    // Copy edges
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        for(auto e : v->getAdj()) {
+            auto src = e->getOrig()->getInfo();
+            auto dest = e->getDest()->getInfo();
+
+            newGraph->addEdge(src, dest, e->getWeight());
+        }
+    }
+    // newGraph->updateAllVerticesFlow();
+    return newGraph;
+}
