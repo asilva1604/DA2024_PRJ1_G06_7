@@ -629,6 +629,35 @@ void Graph::getMaxFlow(NetworkPoint city) {
 
 }
 
+std::vector<std::pair<std::string, double>> Graph::checkWaterSupply() {
+    //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
+
+    std::vector<std::pair<std::string, double>> result;
+
+    if (!maxFlowRan) edmondsKarp();
+
+    for (const auto &p: vertexSet) {
+        auto v = p.second;
+
+        if (v->getInfo().getPointType() == "city") {
+            auto demand = v->getInfo().getDemand();
+            double maxFlow = 0.0;
+
+            // sum up maximum flow from incoming edges
+            for (auto &e: v->getIncoming())
+                maxFlow += e->getFlow();
+
+            if (maxFlow < demand) {
+                // cities that cannot be supplied by the desired water rate level
+                result.emplace_back(v->getInfo().getCode(), (demand - maxFlow));
+                //std::cout << "City: " << v->getInfo().getCode() << ", Deficit: " << (demand - maxFlow) << std::endl;
+            }
+        }
+    }
+
+    return result;
+}
+
 std::vector<double> Graph::calculateMetrics() {
     std::vector<double> results;
     std::vector<double> differences;

@@ -136,6 +136,8 @@ public:
      */
     void getMaxFlow(NetworkPoint city);
 
+    std::vector<std::pair<std::string, double>> checkWaterSupply();
+  
     std::vector<double> calculateMetrics();
 
     void balanceLoad(double averageDifference);

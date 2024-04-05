@@ -36,6 +36,7 @@ Application::Application() {
     }
 
     network_.getMaxFlow(NetworkPoint("C_9"));
+    network_.checkWaterSupply();
 
     // calculate initial metrics
     std::vector<double> initialMetrics = network_.calculateMetrics();
