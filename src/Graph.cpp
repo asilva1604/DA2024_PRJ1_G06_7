@@ -660,6 +660,7 @@ std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWater
 
 void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
     if(!supply.empty()) {
+        std::cout << std::endl;
         for (const auto &s: supply) {
             std::cout << "City: " << s.first << std::endl;
             std::cout << " - Demand: " << s.second.first << std::endl;

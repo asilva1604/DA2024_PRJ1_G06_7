@@ -16,7 +16,14 @@ class Application {
 public:
     Application();
     const Graph &getNetwork() const;
-
+    void menu();
+    void maxFlow();
+    void waterSupply();
+    void metrics();
+    void reservoir();
+    void stations();
+    void pipelines();
+    void goBack();
 };
 
 
