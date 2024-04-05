@@ -720,6 +720,6 @@ Graph * Graph::copyGraph() {
             newGraph->addEdge(src, dest, e->getWeight());
         }
     }
-    newGraph->updateAllVerticesFlow();
+    // newGraph->updateAllVerticesFlow();
     return newGraph;
 }
