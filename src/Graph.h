@@ -115,6 +115,7 @@ public:
      * Returns true if successful, and false if the source or destination vertex does not exist.
      */
     bool addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w);
+    bool copyEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w, double f);
     bool removeEdge(const NetworkPoint &source, const NetworkPoint &dest);
     bool addBidirectionalEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w);
 

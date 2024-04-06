@@ -276,6 +276,19 @@ bool Graph::addEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double 
 }
 
 /*
+ * Auxiliary function that creates a new edge with flow already
+ */
+bool Graph::copyEdge(const NetworkPoint &sourc, const NetworkPoint &dest, double w, double f) {
+    auto v1 = findVertex(sourc);
+    auto v2 = findVertex(dest);
+    if (v1 == nullptr || v2 == nullptr)
+        return false;
+    auto e = v1->addEdge(v2, w);
+    e->setFlow(f);
+    return true;
+}
+
+/*
  * Removes an edge from a graph (this).
  * The edge is identified by the source (sourc) and destination (dest) contents.
  * Returns true if successful, and false if such edge does not exist.
@@ -756,7 +769,7 @@ Graph *Graph::copyGraph() {
             auto src = e->getOrig()->getInfo();
             auto dest = e->getDest()->getInfo();
 
-            newGraph->addEdge(src, dest, e->getWeight());
+            newGraph->copyEdge(src, dest, e->getWeight(), e->getFlow());
         }
     }
     // newGraph->updateAllVerticesFlow();
