@@ -17,7 +17,7 @@ public:
     Application();
     const Graph &getNetwork() const;
     void menu();
-    void maxFlow();
+    void maxFlow(std::string c);
     void waterSupply();
     void metrics();
     void reservoir();

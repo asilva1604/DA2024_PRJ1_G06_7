@@ -60,9 +60,12 @@ void Application::menu() {
         cout << "Enter your choice: ";
         cin >> choice;
 
+        string sel;
         switch (choice) {
             case 1:
-                maxFlow();
+                cout << "Enter the city: ";
+                cin >> sel;
+                maxFlow(sel);
                 break;
             case 2:
                 waterSupply();
@@ -88,15 +91,16 @@ void Application::menu() {
     } while (choice != 0);
 }
 
-void Application::maxFlow() {
+void Application::maxFlow(string c) {
     std::cout << std::endl;
-    network_.getMaxFlow(NetworkPoint("C_9"));
+    network_.getMaxFlow(NetworkPoint(c));
     goBack();
 }
 
 void Application::waterSupply() {
     // calculate water supply
     std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.checkWaterSupply();
+    cout << waterSupply.size();
     // PRINT WATER SUPPLY
     network_.printWaterSupply(waterSupply);
     goBack();
