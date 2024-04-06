@@ -60,9 +60,12 @@ void Application::menu() {
         cout << "Enter your choice: ";
         cin >> choice;
 
+        string sel;
         switch (choice) {
             case 1:
-                maxFlow();
+                cout << "Enter the city: ";
+                cin >> sel;
+                maxFlow(sel);
                 break;
             case 2:
                 waterSupply();
@@ -88,9 +91,10 @@ void Application::menu() {
     } while (choice != 0);
 }
 
-void Application::maxFlow() {
+void Application::maxFlow(string c) {
     std::cout << std::endl;
-    network_.getMaxFlow(NetworkPoint("C_9"));
+    auto flow = network_.getMaxFlow(NetworkPoint(c));
+    std::cout << "Max flow to city " << c << " is " << flow << std::endl;
     goBack();
 }
 

@@ -612,21 +612,21 @@ void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoin
     }
 }
 
-void Graph::getMaxFlow(NetworkPoint city) {
+double Graph::getMaxFlow(NetworkPoint city) {
     if (!maxFlowRan) {
         edmondsKarp();
     }
     auto v = findVertex(city);
     if (v == nullptr) {
         std::cout << "City not found!" << std::endl;
-        return;
+        return 0.0;
     }
     double maxFlow = 0;
     for (auto e: v->getIncoming()) {
         maxFlow += e->getFlow();
     }
-    std::cout << "Max flow to city " << city.getCode() << " is " << maxFlow << std::endl;
-
+    //std::cout << "Max flow to city " << city.getCode() << " is " << maxFlow << std::endl;
+    return maxFlow;
 }
 
 std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWaterSupply() {
