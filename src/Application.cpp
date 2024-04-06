@@ -93,14 +93,14 @@ void Application::menu() {
 
 void Application::maxFlow(string c) {
     std::cout << std::endl;
-    network_.getMaxFlow(NetworkPoint(c));
+    auto flow = network_.getMaxFlow(NetworkPoint(c));
+    std::cout << "Max flow to city " << c << " is " << flow << std::endl;
     goBack();
 }
 
 void Application::waterSupply() {
     // calculate water supply
     std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.checkWaterSupply();
-    cout << waterSupply.size();
     // PRINT WATER SUPPLY
     network_.printWaterSupply(waterSupply);
     goBack();

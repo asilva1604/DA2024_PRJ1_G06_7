@@ -134,7 +134,7 @@ public:
      * @brief calculates max flow to a certain city
      * @param city
      */
-    void getMaxFlow(NetworkPoint city);
+    double getMaxFlow(NetworkPoint city);
 
     std::vector<std::pair<std::string, std::pair<double, double>>> checkWaterSupply();
 
@@ -156,11 +156,6 @@ protected:
     double ** distMatrix = nullptr;   // dist matrix for Floyd-Warshall
     int **pathMatrix = nullptr;   // path matrix for Floyd-Warshall
     void addSuperSourceAndSink();
-
-    /**
-     * should only run once, is supposed to calculate max flow to all cities, which are the sinks
-     */
-
 
     /**
      * serves to store if the maximum flow edmond karps algorithm has already been ran
