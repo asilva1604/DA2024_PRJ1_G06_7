@@ -12,6 +12,7 @@
 
 class Application {
     Graph network_;
+    std::vector<std::string> cities_;
 
 public:
     Application();
