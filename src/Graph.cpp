@@ -671,6 +671,9 @@ void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double
 }
 
 std::vector<double> Graph::calculateMetrics() {
+    if (!maxFlowRan) {
+        edmondsKarp();
+    }
     std::vector<double> results;
     std::vector<double> differences;
     double sumDifferences = 0.0;

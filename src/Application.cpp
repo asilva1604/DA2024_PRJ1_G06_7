@@ -18,6 +18,7 @@ Application::Application() {
     for (const auto &v: cities.getData()) {
         network_.addVertex(NetworkPoint(v.at(0), stoi(v.at(1)), v.at(2),
                                         stof(v.at(3)), v.at(4)));
+        cities_.push_back(v.at(2));
     }
 
     for (const auto &v: reservoirs.getData()) {
@@ -63,7 +64,7 @@ void Application::menu() {
         string sel;
         switch (choice) {
             case 1:
-                cout << "Enter the city: ";
+                cout << "Enter the city, or enter the string \"all\" for all cities: ";
                 cin >> sel;
                 maxFlow(sel);
                 break;
@@ -93,7 +94,16 @@ void Application::menu() {
 
 void Application::maxFlow(string c) {
     std::cout << std::endl;
-    auto flow = network_.getMaxFlow(NetworkPoint(c));
+    double flow;
+    if (c == "all") {
+        for (const auto &city : cities_) {
+            flow = network_.getMaxFlow(NetworkPoint(city));
+            std::cout << "Max flow to city " << city << " is " << flow << std::endl;
+        }
+        goBack();
+        return;
+    }
+    flow = network_.getMaxFlow(NetworkPoint(c));
     std::cout << "Max flow to city " << c << " is " << flow << std::endl;
     goBack();
 }
