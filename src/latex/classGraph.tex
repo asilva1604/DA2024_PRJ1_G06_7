@@ -1,0 +1,300 @@
+\hypertarget{classGraph}{}\doxysection{Graph Class Reference}
+\label{classGraph}\index{Graph@{Graph}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classGraph_a28b997d5f76dfc9f9f859dfb56db71c6}\label{classGraph_a28b997d5f76dfc9f9f859dfb56db71c6}} 
+\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$ {\bfseries find\+Vertex} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&in) const
+\item 
+\mbox{\Hypertarget{classGraph_a4ec2571dbe14ba5aed58bbc3d201fe8f}\label{classGraph_a4ec2571dbe14ba5aed58bbc3d201fe8f}} 
+bool {\bfseries add\+Vertex} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&in)
+\item 
+\mbox{\Hypertarget{classGraph_a1363d4450cae7cbf7ecbd5b6fe802b67}\label{classGraph_a1363d4450cae7cbf7ecbd5b6fe802b67}} 
+bool {\bfseries remove\+Vertex} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&in)
+\item 
+\mbox{\Hypertarget{classGraph_a5c9f770dc363a54670ac0ea27697aaf4}\label{classGraph_a5c9f770dc363a54670ac0ea27697aaf4}} 
+bool {\bfseries add\+Edge} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&sourc, const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&dest, double w)
+\item 
+\mbox{\Hypertarget{classGraph_a692346652509f8cb2555f838b4acbeda}\label{classGraph_a692346652509f8cb2555f838b4acbeda}} 
+bool {\bfseries remove\+Edge} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&source, const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&dest)
+\item 
+\mbox{\Hypertarget{classGraph_abf0de049ff043cd9d591a6be5952ee9e}\label{classGraph_abf0de049ff043cd9d591a6be5952ee9e}} 
+bool {\bfseries add\+Bidirectional\+Edge} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&sourc, const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&dest, double w)
+\item 
+\mbox{\Hypertarget{classGraph_abb5e0517e2979c54eebdafc2a9875e8f}\label{classGraph_abb5e0517e2979c54eebdafc2a9875e8f}} 
+int {\bfseries get\+Num\+Vertex} () const
+\item 
+\mbox{\Hypertarget{classGraph_a8d6b5ba11131139194346c4299da01ab}\label{classGraph_a8d6b5ba11131139194346c4299da01ab}} 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$ $>$ {\bfseries get\+Vertex\+Set} () const
+\item 
+\mbox{\Hypertarget{classGraph_af94cb183e63939e4b10181277a3a8136}\label{classGraph_af94cb183e63939e4b10181277a3a8136}} 
+std\+::vector$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ {\bfseries dfs} () const
+\item 
+\mbox{\Hypertarget{classGraph_aff70911b254839ba2575632659a62907}\label{classGraph_aff70911b254839ba2575632659a62907}} 
+std\+::vector$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ {\bfseries dfs} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&source) const
+\item 
+\mbox{\Hypertarget{classGraph_a45d6d9c586e9bf2a8278c3e534a18eb3}\label{classGraph_a45d6d9c586e9bf2a8278c3e534a18eb3}} 
+void {\bfseries dfs\+Visit} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$v, std\+::vector$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ \&res) const
+\item 
+\mbox{\Hypertarget{classGraph_afde7bc40123118e7058bc7a48cc86688}\label{classGraph_afde7bc40123118e7058bc7a48cc86688}} 
+std\+::vector$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ {\bfseries bfs} (const \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} \&source) const
+\item 
+\mbox{\Hypertarget{classGraph_a4c636eb91a3e8e51c4fdc02734bbed79}\label{classGraph_a4c636eb91a3e8e51c4fdc02734bbed79}} 
+bool {\bfseries is\+DAG} () const
+\item 
+bool \mbox{\hyperlink{classGraph_aae6ddf45c8cb0ef145e9e759fbee0f52}{dfs\+Is\+DAG}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$v) const
+\item 
+\mbox{\Hypertarget{classGraph_a584bc7e758a846f338103ac3adae0efc}\label{classGraph_a584bc7e758a846f338103ac3adae0efc}} 
+std\+::vector$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ {\bfseries topsort} () const
+\item 
+double \mbox{\hyperlink{classGraph_a4d354a0dd2a015475aaae7d746462205}{get\+Max\+Flow}} (\mbox{\hyperlink{classNetworkPoint}{Network\+Point}} city)
+\begin{DoxyCompactList}\small\item\em Calculates the maximum flow to the specified city. @\+Complexity\+: O(\+E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) \end{DoxyCompactList}\item 
+std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::pair$<$ double, double $>$ $>$ $>$ \mbox{\hyperlink{classGraph_a49efd27c668572a80d627cd1ff138b41}{check\+Water\+Supply}} ()
+\begin{DoxyCompactList}\small\item\em Checks water supply for each city in the graph. @\+Complexity\+: O(V + E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classGraph_af5055f6fb6a1e6678e9d2381853035a8}{print\+Water\+Supply}} (std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::pair$<$ double, double $>$$>$$>$ supply)
+\begin{DoxyCompactList}\small\item\em Prints the values returned from the \textquotesingle{}\mbox{\hyperlink{classGraph_a49efd27c668572a80d627cd1ff138b41}{check\+Water\+Supply()}}\textquotesingle{} function. @\+Complexity O(n) \end{DoxyCompactList}\item 
+std\+::vector$<$ double $>$ \mbox{\hyperlink{classGraph_a8926394957f5c1a56da401d4d3a1f000}{calculate\+Metrics}} ()
+\begin{DoxyCompactList}\small\item\em Calculates average difference, variance, and standard deviation of the flow to all cities @\+Complexity\+: O(V + E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classGraph_a0fb757daefd3d62a1136f00d27d18a96}{balance\+Load}} (double average\+Difference)
+\begin{DoxyCompactList}\small\item\em Balances the load by redistributing flow in the graph. @\+Complexity O(V + E) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classGraph_ad2752d7bf3b57cb7275528724599ada1}{print\+Metrics}} (std\+::vector$<$ double $>$ metric)
+\begin{DoxyCompactList}\small\item\em Prints the results obtained from the \textquotesingle{}\mbox{\hyperlink{classGraph_a8926394957f5c1a56da401d4d3a1f000}{calculate\+Metrics()}}\textquotesingle{} function @\+Complexity O(n) \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classGraph}{Graph}} $\ast$ \mbox{\hyperlink{classGraph_aa0ece00411674a2d73696555cf494daf}{copy\+Graph}} ()
+\begin{DoxyCompactList}\small\item\em Auxiliary function to copy a graph. @\+Complexity O(V + E) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+unsigned \mbox{\hyperlink{classGraph_a6222745deb7c6be06aaa7fb88524bc20}{find\+Minimal\+Residual\+Along\+Path}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$s, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$p) const
+\begin{DoxyCompactList}\small\item\em Calculates the minimal residual capacity along the augmenting path. @\+Complexity\+: O(\+V) \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classGraph_a10dbf64bfe1c68bcbbd8223f83726380}{find\+Aug\+Path}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$s, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$t)
+\begin{DoxyCompactList}\small\item\em Finds an augmenting path from the super source vertex to the super sink vertex using BFS. @\+Complexity\+: O(V + E) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classGraph_af32fb70b0c47cd5e97b860f2ff80482c}{augment}} (\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$s, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$t, double f)
+\begin{DoxyCompactList}\small\item\em Augments flow along the path from sink to source. @\+Complexity\+: O(\+V) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classGraph_a07a2ec6c5975ce5dfa2cd8ad166b97ee}\label{classGraph_a07a2ec6c5975ce5dfa2cd8ad166b97ee}} 
+void \mbox{\hyperlink{classGraph_a07a2ec6c5975ce5dfa2cd8ad166b97ee}{add\+Super\+Source\+And\+Sink}} ()
+\begin{DoxyCompactList}\small\item\em Adds a super source and super sink to the graph. @\+Complexity\+: O(\+V) \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classGraph_a70fc03e8dad7d9145feefbe4c8449a9a}{test\+And\+Visit}} (std\+::queue$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$ $>$ \&q, \mbox{\hyperlink{classEdge}{Edge}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$e, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$w, double residual)
+\begin{DoxyCompactList}\small\item\em Tests and visits a vertex for the \textquotesingle{}find\+Aug\+Path\textquotesingle{} function. Time Complexity\+: O(1) \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classGraph_a3ba499a6fb861d16c2e613861d9b5b08}\label{classGraph_a3ba499a6fb861d16c2e613861d9b5b08}} 
+void \mbox{\hyperlink{classGraph_a3ba499a6fb861d16c2e613861d9b5b08}{edmonds\+Karp}} ()
+\begin{DoxyCompactList}\small\item\em Sets the flow of all edges to 0 and runs the Edmonds-\/\+Karp algorithm @\+Complexity\+: O(\+V $\ast$ E$^\wedge$2) \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classGraph_af7af3b557315938f5179e60eddb4c193}\label{classGraph_af7af3b557315938f5179e60eddb4c193}} 
+std\+::unordered\+\_\+map$<$ std\+::string, \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$ $>$ {\bfseries vertex\+Set}
+\item 
+\mbox{\Hypertarget{classGraph_a9e61864da69191c1896a25a708d1a02d}\label{classGraph_a9e61864da69191c1896a25a708d1a02d}} 
+double $\ast$$\ast$ {\bfseries dist\+Matrix} = nullptr
+\item 
+\mbox{\Hypertarget{classGraph_a3ae09699c3616af3ebfcb1eb045f2b62}\label{classGraph_a3ae09699c3616af3ebfcb1eb045f2b62}} 
+int $\ast$$\ast$ {\bfseries path\+Matrix} = nullptr
+\item 
+bool \mbox{\hyperlink{classGraph_a11a7719181c787f5cb185a66dcb5085e}{max\+Flow\+Ran}} = false
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classGraph_af32fb70b0c47cd5e97b860f2ff80482c}\label{classGraph_af32fb70b0c47cd5e97b860f2ff80482c}} 
+\index{Graph@{Graph}!augment@{augment}}
+\index{augment@{augment}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{augment()}{augment()}}
+{\footnotesize\ttfamily void Graph\+::augment (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{s,  }\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{t,  }\item[{double}]{f }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Augments flow along the path from sink to source. @\+Complexity\+: O(\+V) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Pointer to the source vertex. \\
+\hline
+{\em t} & Pointer to the sink vertex. \\
+\hline
+{\em f} & Amount of flow to be augmented along the path. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_a0fb757daefd3d62a1136f00d27d18a96}\label{classGraph_a0fb757daefd3d62a1136f00d27d18a96}} 
+\index{Graph@{Graph}!balanceLoad@{balanceLoad}}
+\index{balanceLoad@{balanceLoad}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{balanceLoad()}{balanceLoad()}}
+{\footnotesize\ttfamily void Graph\+::balance\+Load (\begin{DoxyParamCaption}\item[{double}]{average\+Difference }\end{DoxyParamCaption})}
+
+
+
+Balances the load by redistributing flow in the graph. @\+Complexity O(V + E) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em average\+Difference} & The average difference used for load balancing. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_a8926394957f5c1a56da401d4d3a1f000}\label{classGraph_a8926394957f5c1a56da401d4d3a1f000}} 
+\index{Graph@{Graph}!calculateMetrics@{calculateMetrics}}
+\index{calculateMetrics@{calculateMetrics}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{calculateMetrics()}{calculateMetrics()}}
+{\footnotesize\ttfamily std\+::vector$<$ double $>$ Graph\+::calculate\+Metrics (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Calculates average difference, variance, and standard deviation of the flow to all cities @\+Complexity\+: O(V + E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) 
+
+\begin{DoxyReturn}{Returns}
+A vector containing the calculated metrics\+: average difference, variance, and standard deviation. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a49efd27c668572a80d627cd1ff138b41}\label{classGraph_a49efd27c668572a80d627cd1ff138b41}} 
+\index{Graph@{Graph}!checkWaterSupply@{checkWaterSupply}}
+\index{checkWaterSupply@{checkWaterSupply}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{checkWaterSupply()}{checkWaterSupply()}}
+{\footnotesize\ttfamily std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::pair$<$ double, double $>$ $>$ $>$ Graph\+::check\+Water\+Supply (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Checks water supply for each city in the graph. @\+Complexity\+: O(V + E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) 
+
+\begin{DoxyReturn}{Returns}
+A vector of pairs, where each pair contains the city code, demand, and maximum flow deficit. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_aa0ece00411674a2d73696555cf494daf}\label{classGraph_aa0ece00411674a2d73696555cf494daf}} 
+\index{Graph@{Graph}!copyGraph@{copyGraph}}
+\index{copyGraph@{copyGraph}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{copyGraph()}{copyGraph()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classGraph}{Graph}} $\ast$ Graph\+::copy\+Graph (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Auxiliary function to copy a graph. @\+Complexity O(V + E) 
+
+\begin{DoxyReturn}{Returns}
+A pointer to the new graph. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_aae6ddf45c8cb0ef145e9e759fbee0f52}\label{classGraph_aae6ddf45c8cb0ef145e9e759fbee0f52}} 
+\index{Graph@{Graph}!dfsIsDAG@{dfsIsDAG}}
+\index{dfsIsDAG@{dfsIsDAG}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{dfsIsDAG()}{dfsIsDAG()}}
+{\footnotesize\ttfamily bool Graph\+::dfs\+Is\+DAG (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{v }\end{DoxyParamCaption}) const}
+
+Auxiliary function that visits a vertex (v) and its adjacent, recursively. Returns false (not acyclic) if an edge to a vertex in the stack is found. \mbox{\Hypertarget{classGraph_a10dbf64bfe1c68bcbbd8223f83726380}\label{classGraph_a10dbf64bfe1c68bcbbd8223f83726380}} 
+\index{Graph@{Graph}!findAugPath@{findAugPath}}
+\index{findAugPath@{findAugPath}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{findAugPath()}{findAugPath()}}
+{\footnotesize\ttfamily bool Graph\+::find\+Aug\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{s,  }\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{t }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Finds an augmenting path from the super source vertex to the super sink vertex using BFS. @\+Complexity\+: O(V + E) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Pointer to the source vertex. \\
+\hline
+{\em t} & Pointer to the sink vertex. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+True if an augmenting path is found; otherwise, false. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a6222745deb7c6be06aaa7fb88524bc20}\label{classGraph_a6222745deb7c6be06aaa7fb88524bc20}} 
+\index{Graph@{Graph}!findMinimalResidualAlongPath@{findMinimalResidualAlongPath}}
+\index{findMinimalResidualAlongPath@{findMinimalResidualAlongPath}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{findMinimalResidualAlongPath()}{findMinimalResidualAlongPath()}}
+{\footnotesize\ttfamily unsigned Graph\+::find\+Minimal\+Residual\+Along\+Path (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{s,  }\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{p }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Calculates the minimal residual capacity along the augmenting path. @\+Complexity\+: O(\+V) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & Pointer to the source vertex. \\
+\hline
+{\em t} & Pointer to the sink vertex. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The minimal residual capacity along the augmenting path. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_a4d354a0dd2a015475aaae7d746462205}\label{classGraph_a4d354a0dd2a015475aaae7d746462205}} 
+\index{Graph@{Graph}!getMaxFlow@{getMaxFlow}}
+\index{getMaxFlow@{getMaxFlow}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{getMaxFlow()}{getMaxFlow()}}
+{\footnotesize\ttfamily double Graph\+::get\+Max\+Flow (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classNetworkPoint}{Network\+Point}}}]{city }\end{DoxyParamCaption})}
+
+
+
+Calculates the maximum flow to the specified city. @\+Complexity\+: O(\+E) if Edmonds-\/\+Karp has already been called. If not\+: O(\+V $\ast$ E$^\wedge$2) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em city} & The city vertex to calculate the maximum flow for. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The maximum flow to the specified city. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classGraph_ad2752d7bf3b57cb7275528724599ada1}\label{classGraph_ad2752d7bf3b57cb7275528724599ada1}} 
+\index{Graph@{Graph}!printMetrics@{printMetrics}}
+\index{printMetrics@{printMetrics}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{printMetrics()}{printMetrics()}}
+{\footnotesize\ttfamily void Graph\+::print\+Metrics (\begin{DoxyParamCaption}\item[{std\+::vector$<$ double $>$}]{metric }\end{DoxyParamCaption})}
+
+
+
+Prints the results obtained from the \textquotesingle{}\mbox{\hyperlink{classGraph_a8926394957f5c1a56da401d4d3a1f000}{calculate\+Metrics()}}\textquotesingle{} function @\+Complexity O(n) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em metric} & A vector containing the calculated metrics. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_af5055f6fb6a1e6678e9d2381853035a8}\label{classGraph_af5055f6fb6a1e6678e9d2381853035a8}} 
+\index{Graph@{Graph}!printWaterSupply@{printWaterSupply}}
+\index{printWaterSupply@{printWaterSupply}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{printWaterSupply()}{printWaterSupply()}}
+{\footnotesize\ttfamily void Graph\+::print\+Water\+Supply (\begin{DoxyParamCaption}\item[{std\+::vector$<$ std\+::pair$<$ std\+::string, std\+::pair$<$ double, double $>$$>$$>$}]{supply }\end{DoxyParamCaption})}
+
+
+
+Prints the values returned from the \textquotesingle{}\mbox{\hyperlink{classGraph_a49efd27c668572a80d627cd1ff138b41}{check\+Water\+Supply()}}\textquotesingle{} function. @\+Complexity O(n) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em supply} & The vector returned from the \textquotesingle{}\mbox{\hyperlink{classGraph_a49efd27c668572a80d627cd1ff138b41}{check\+Water\+Supply()}}\textquotesingle{} function. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classGraph_a70fc03e8dad7d9145feefbe4c8449a9a}\label{classGraph_a70fc03e8dad7d9145feefbe4c8449a9a}} 
+\index{Graph@{Graph}!testAndVisit@{testAndVisit}}
+\index{testAndVisit@{testAndVisit}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{testAndVisit()}{testAndVisit()}}
+{\footnotesize\ttfamily void Graph\+::test\+And\+Visit (\begin{DoxyParamCaption}\item[{std\+::queue$<$ \mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$ $>$ \&}]{q,  }\item[{\mbox{\hyperlink{classEdge}{Edge}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{e,  }\item[{\mbox{\hyperlink{classVertex}{Vertex}}$<$ \mbox{\hyperlink{classNetworkPoint}{Network\+Point}} $>$ $\ast$}]{w,  }\item[{double}]{residual }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [protected]}}
+
+
+
+Tests and visits a vertex for the \textquotesingle{}find\+Aug\+Path\textquotesingle{} function. Time Complexity\+: O(1) 
+
+
+\begin{DoxyParams}{Parameters}
+{\em q} & Reference to the queue. \\
+\hline
+{\em e} & Pointer to the edge connecting to the vertex. \\
+\hline
+{\em w} & Pointer to the vertex to be tested and visited. \\
+\hline
+{\em residual} & Residual capacity of the edge connecting to the vertex. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Data Documentation}
+\mbox{\Hypertarget{classGraph_a11a7719181c787f5cb185a66dcb5085e}\label{classGraph_a11a7719181c787f5cb185a66dcb5085e}} 
+\index{Graph@{Graph}!maxFlowRan@{maxFlowRan}}
+\index{maxFlowRan@{maxFlowRan}!Graph@{Graph}}
+\doxysubsubsection{\texorpdfstring{maxFlowRan}{maxFlowRan}}
+{\footnotesize\ttfamily bool Graph\+::max\+Flow\+Ran = false\hspace{0.3cm}{\ttfamily [protected]}}
+
+serves to store if the maximum flow edmond karps algorithm has already been ran 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Graph.\+h\item 
+Graph.\+cpp\end{DoxyCompactItemize}
