@@ -777,10 +777,29 @@ Graph *Graph::copyGraph() {
 }
 
 std::vector<std::pair<std::string, std::pair<double, double>>> Graph::outOfCommission_WS(Vertex<NetworkPoint> *ommited) {
-    //auto waterSupply = checkWaterSupply();
+    auto waterSupply = checkWaterSupply();
     Graph* g  = copyGraph();
     g->removeVertex(ommited->getInfo());
-    auto res = g->checkWaterSupply();
+    auto newWaterSupply = g->checkWaterSupply();
+    std::vector<std::pair<std::string, std::pair<double, double>>> res;
+    for ( auto element : newWaterSupply) {
+        if (find(waterSupply.begin(), waterSupply.end(), element) == waterSupply.end()) {
+            auto old_flow = getMaxFlow(element.first);
+            auto new_flow = element.second.second;
+            res.emplace_back(element.first, std::make_pair(old_flow, new_flow));
+        }
+    }
     delete g;
     return res;
+}
+
+void Graph::printWaterSupplyChanges(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
+    if(!supply.empty()) {
+        std::cout << std::endl;
+        for (const auto &s: supply) {
+            std::cout << "City: " << s.first << std::endl;
+            std::cout << " - Old flow: " << s.second.first << std::endl;
+            std::cout << " - New Flow: " << s.second.second << std::endl;
+        }
+    }
 }

@@ -144,7 +144,11 @@ void Application::reservoir(string c) {
         // calculate water supply
         std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.outOfCommission_WS(wr);
         // PRINT WATER SUPPLY
-        network_.printWaterSupply(waterSupply);
+        if (!waterSupply.empty()){
+            std::cout << "Reservoir " << c << ": "<<" is  removed (it had a maximum delivery of "
+            << wr->getInfo().getMaxDelivery() << " m3/sec)"<< std::endl;
+            network_.printWaterSupplyChanges(waterSupply);
+        }
         goBack();
     }
 }

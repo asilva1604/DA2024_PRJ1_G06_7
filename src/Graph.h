@@ -149,6 +149,8 @@ public:
 
     std::vector<std::pair<std::string, std::pair<double, double>>>outOfCommission_WS(Vertex<NetworkPoint> *ommited);
 
+    void printWaterSupplyChanges(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
+
     Graph * copyGraph();
 
 protected:
