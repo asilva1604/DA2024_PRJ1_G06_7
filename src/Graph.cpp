@@ -769,9 +769,18 @@ Graph *Graph::copyGraph() {
             auto src = e->getOrig()->getInfo();
             auto dest = e->getDest()->getInfo();
 
-            newGraph->copyEdge(src, dest, e->getWeight(), e->getFlow());
+            newGraph->addEdge(src, dest, e->getWeight());
         }
     }
     // newGraph->updateAllVerticesFlow();
     return newGraph;
+}
+
+std::vector<std::pair<std::string, std::pair<double, double>>> Graph::outOfCommission_WS(Vertex<NetworkPoint> *ommited) {
+    //auto waterSupply = checkWaterSupply();
+    Graph* g  = copyGraph();
+    g->removeVertex(ommited->getInfo());
+    auto res = g->checkWaterSupply();
+    delete g;
+    return res;
 }

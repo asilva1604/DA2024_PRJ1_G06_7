@@ -147,6 +147,8 @@ public:
 
     void printMetrics(std::vector<double> metric);
 
+    std::vector<std::pair<std::string, std::pair<double, double>>>outOfCommission_WS(Vertex<NetworkPoint> *ommited);
+
     Graph * copyGraph();
 
 protected:

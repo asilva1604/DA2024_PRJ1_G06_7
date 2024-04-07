@@ -6,6 +6,8 @@
 
 #include "FileReader.h"
 #include <iostream>
+#include <conio.h>
+
 
 using namespace std;
 
@@ -43,6 +45,7 @@ Application::Application() {
 
 void Application::menu() {
     int choice;
+    bool flag = true;
 
     do {
         cout << endl << "Menu:" << endl << endl;
@@ -74,7 +77,9 @@ void Application::menu() {
                 metrics();
                 break;
             case 4:
-                reservoir();
+                cout << "Enter the reservoir's code: ";
+                cin >> sel;
+                reservoir(sel);
                 break;
             case 5:
                 stations();
@@ -84,21 +89,25 @@ void Application::menu() {
                 break;
             case 0:
                 cout << "Exiting program. Goodbye!" << endl;
+                flag = false;
                 break;
             default:
                 cout << "Invalid choice. Please try again." << endl;
         }
-    } while (choice != 0);
+    } while (flag);
 }
 
 void Application::maxFlow(string c) {
     std::cout << std::endl;
     auto flow = network_.getMaxFlow(NetworkPoint(c));
-    std::cout << "Max flow to city " << c << " is " << flow << std::endl;
+    if (flow != 0.0) {
+        std::cout << "Max flow to city " << c << " is " << flow << std::endl;
+    }
     goBack();
 }
 
 void Application::waterSupply() {
+
     // calculate water supply
     std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.checkWaterSupply();
     // PRINT WATER SUPPLY
@@ -125,9 +134,19 @@ void Application::metrics() {
     goBack();
 }
 
-void Application::reservoir() {
-
-    goBack();
+void Application::reservoir(string c) {
+    auto wr = network_.findVertex(c);
+    if (wr == nullptr) {
+        std::cout << "Couldn't find the water reservoir with the selected code" << std::endl;
+        goBack();
+    }
+    else {
+        // calculate water supply
+        std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.outOfCommission_WS(wr);
+        // PRINT WATER SUPPLY
+        network_.printWaterSupply(waterSupply);
+        goBack();
+    }
 }
 
 void Application::stations() {
@@ -141,19 +160,9 @@ void Application::pipelines() {
 }
 
 void Application::goBack() {
-    int choice;
-
-    do {
-        cout << endl << "0. Back" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
-
-        if (choice == 0)
-            return;
-        else
-            cout << "Invalid choice. Please try again." << endl;
-
-    } while (choice != 0);
+    cout <<endl << "---------------------------" << endl << "Press ENTER to go back." << endl
+    << "---------------------------" << endl;
+    getch();
 }
 
 const Graph &Application::getNetwork() const {

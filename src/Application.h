@@ -20,7 +20,7 @@ public:
     void maxFlow(std::string c);
     void waterSupply();
     void metrics();
-    void reservoir();
+    void reservoir(std::string c);
     void stations();
     void pipelines();
     void goBack();
