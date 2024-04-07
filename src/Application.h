@@ -25,6 +25,8 @@ public:
     void stations();
     void pipelines();
     void goBack();
+    bool waterSupplyRan = false;
+    std::vector<std::pair<std::string, std::pair<double, double>>> supply;
 };
 
 

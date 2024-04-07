@@ -6,6 +6,7 @@
 
 #include "FileReader.h"
 #include <iostream>
+#include <conio.h>
 
 using namespace std;
 
@@ -105,7 +106,7 @@ void Application::maxFlow(string c) {
         }
         goBack();
         return;
-    } else if (auto v = network_.findVertex(NetworkPoint(c)) != nullptr) {
+    } else if (network_.findVertex(NetworkPoint(c)) != nullptr) {
         flow = network_.getMaxFlow(NetworkPoint(c));
         std::cout << "Max flow to city " << c << " is " << flow << std::endl;
         goBack();
@@ -119,9 +120,11 @@ void Application::maxFlow(string c) {
 
 void Application::waterSupply() {
     // calculate water supply
-    std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.checkWaterSupply();
+    if(!waterSupplyRan)
+        supply = network_.checkWaterSupply();
     // PRINT WATER SUPPLY
-    network_.printWaterSupply(waterSupply);
+    network_.printWaterSupply(supply);
+    waterSupplyRan = true;
     goBack();
 }
 
@@ -160,19 +163,9 @@ void Application::pipelines() {
 }
 
 void Application::goBack() {
-    int choice;
-
-    do {
-        cout << endl << "0. Back" << endl;
-        cout << "Enter your choice and press ENTER: ";
-        cin >> choice;
-
-        if (choice == 0)
-            return;
-        else
-            cout << "Invalid choice. Please try again." << endl;
-
-    } while (choice != 0);
+    cout << endl << "---------------------------" << endl << "Press ENTER to go back." << endl
+         << "---------------------------" << endl;
+    getch();
 }
 
 const Graph &Application::getNetwork() const {
