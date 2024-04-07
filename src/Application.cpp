@@ -46,7 +46,10 @@ void Application::menu() {
     int choice;
 
     do {
-        cout << endl << "Menu:" << endl << endl;
+        cout << endl << "+-------------------------------------------------------------+" << endl;
+        cout << "|  Welcome to the Analysis Tool for Water Supply Management!  |" << endl;
+        cout << "|                    We hope to be useful!                    |" << endl;
+        cout << "+-------------------------------------------------------------+" << endl << endl;
         cout << "| Basic Service Metrics |" << endl;
         cout << "    T2.1. Maximum Flow" << endl;
         cout << "    T2.2. Water Demand vs Actual Flow" << endl;
@@ -58,7 +61,7 @@ void Application::menu() {
         cout << "    T3.3. Pipelines" << endl << endl;
 
         cout << "0. Exit" << endl << endl;
-        cout << "Enter your choice: ";
+        cout << "Enter your choice and press ENTER: ";
         cin >> choice;
 
         string sel;
@@ -96,16 +99,22 @@ void Application::maxFlow(string c) {
     std::cout << std::endl;
     double flow;
     if (c == "all") {
-        for (const auto &city : cities_) {
+        for (const auto &city: cities_) {
             flow = network_.getMaxFlow(NetworkPoint(city));
             std::cout << "Max flow to city " << city << " is " << flow << std::endl;
         }
         goBack();
         return;
+    } else if (auto v = network_.findVertex(NetworkPoint(c)) != nullptr) {
+        flow = network_.getMaxFlow(NetworkPoint(c));
+        std::cout << "Max flow to city " << c << " is " << flow << std::endl;
+        goBack();
+        return;
+    } else {
+        std::cout << "City not found!" << std::endl;
+        goBack();
+        return;
     }
-    flow = network_.getMaxFlow(NetworkPoint(c));
-    std::cout << "Max flow to city " << c << " is " << flow << std::endl;
-    goBack();
 }
 
 void Application::waterSupply() {
@@ -155,7 +164,7 @@ void Application::goBack() {
 
     do {
         cout << endl << "0. Back" << endl;
-        cout << "Enter your choice: ";
+        cout << "Enter your choice and press ENTER: ";
         cin >> choice;
 
         if (choice == 0)
