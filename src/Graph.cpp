@@ -763,7 +763,3 @@ Graph *Graph::copyGraph() {
     return newGraph;
 }
 
-template<class T>
-void Edge<T>::setWeight(double w) {
-    weight = w;
-}

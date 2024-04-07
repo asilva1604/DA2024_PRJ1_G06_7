@@ -194,5 +194,10 @@ protected:
 void deleteMatrix(int **m, int n);
 void deleteMatrix(double **m, int n);
 
+template<class T>
+void Edge<T>::setWeight(double w) {
+    this->weight = w;
+}
+
 
 #endif //GRAPH_H

@@ -101,11 +101,6 @@ void Application::maxFlow(string c) {
     std::cout << std::endl;
     double flow;
     if (c == "all") {
-        for (const auto &city: cities_) {
-            flow = network_.getMaxFlow(NetworkPoint(city));
-            maxFlows_.emplace(city, double);
-            std::cout << "Max flow to city " << city << " is " << flow << std::endl;
-        }
         goBack();
         return;
     } else if (auto v = network_.findVertex(NetworkPoint(c)) != nullptr) {
@@ -148,21 +143,21 @@ void Application::metrics() {
 }
 
 void Application::reservoir(string r) {
-    maxFlow("all");
+    double flow;
 
-    unordered_map<string, double> newFlows;
-
-    auto source = network_.findVertex(NetworkPoint("source"));
-
-    if (source == nullptr) return;
-
-    for (const auto &edge : source->getAdj()) {
-        if (edge->getDest()->getInfo().getCode() == r) {
-            edge->setWeight(0.0);
-        }
+    for (const auto &city: cities_) {
+        flow = network_.getMaxFlow(NetworkPoint(city));
+        maxFlows_.emplace(city, flow);
     }
 
+    Graph *newGraph = network_.copyGraph();
 
+    newGraph->removeVertex(NetworkPoint(r));
+
+    for (const auto &city: cities_) {
+        flow = newGraph->getMaxFlow(NetworkPoint(city));
+        cout << city << "|| Old Flow: " << maxFlows_.find(city)->second << "|| New Flow: " << flow << endl;
+    }
 
     goBack();
 }
