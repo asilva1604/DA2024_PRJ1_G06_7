@@ -602,7 +602,6 @@ void Graph::addSuperSourceAndSink() {
     }
 }
 
-
 void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w,
                          double residual) {
     if (!w->isVisited() && residual > 0) {
@@ -630,8 +629,6 @@ double Graph::getMaxFlow(NetworkPoint city) {
 }
 
 std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWaterSupply() {
-    //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
-
     std::vector<std::pair<std::string, std::pair<double, double>>> result;
 
     if (!maxFlowRan) edmondsKarp();
@@ -659,7 +656,7 @@ std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWater
 }
 
 void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
-    if(!supply.empty()) {
+    if (!supply.empty()) {
         std::cout << std::endl;
         for (const auto &s: supply) {
             std::cout << "City: " << s.first << std::endl;
@@ -742,7 +739,7 @@ void Graph::printMetrics(std::vector<double> metric) {
 }
 
 Graph *Graph::copyGraph() {
-    Graph *newGraph = new Graph();
+    auto *newGraph = new Graph();
 
     // Copy vertices
     for (const auto &p: vertexSet) {

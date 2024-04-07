@@ -136,16 +136,40 @@ public:
      */
     double getMaxFlow(NetworkPoint city);
 
+    /*!
+     * @brief
+     * @return
+     */
     std::vector<std::pair<std::string, std::pair<double, double>>> checkWaterSupply();
 
+    /*!
+     * @brief
+     * @param supply
+     */
     void printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
-  
+
+    /*!
+     * @brief
+     * @return
+     */
     std::vector<double> calculateMetrics();
 
+    /*!
+     * @brief
+     * @param averageDifference
+     */
     void balanceLoad(double averageDifference);
 
+    /*!
+     * @brief
+     * @param metric
+     */
     void printMetrics(std::vector<double> metric);
 
+    /*!
+     * @brief
+     * @return
+     */
     Graph * copyGraph();
 
 protected:
