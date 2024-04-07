@@ -502,7 +502,9 @@ Graph::~Graph() {
     deleteMatrix(distMatrix, vertexSet.size());
     deleteMatrix(pathMatrix, vertexSet.size());
 }
-
+/*
+ * Time complexity: O(V * E^2)
+ */
 void Graph::edmondsKarp() {
     addSuperSourceAndSink();
 
@@ -529,6 +531,9 @@ void Graph::edmondsKarp() {
     maxFlowRan = true;
 }
 
+/*
+ *Time Complexity: O(V + E)
+ */
 bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
     for (auto v: vertexSet) {
         v.second->setVisited(false);
@@ -548,7 +553,9 @@ bool Graph::findAugPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) {
     }
     return t->isVisited();
 }
-
+ /*
+  * Time Complexity: O(V)
+  */
 unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t) const {
     double f = INF;
     for (auto v = t; v != s;) {
@@ -564,6 +571,9 @@ unsigned Graph::findMinimalResidualAlongPath(Vertex<NetworkPoint> *s, Vertex<Net
     return f;
 }
 
+/*
+ * Time Complexity: O(V)
+ */
 void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f) {
     for (auto v = t; v != s;) {
         auto e = v->getPath();
@@ -578,6 +588,9 @@ void Graph::augment(Vertex<NetworkPoint> *s, Vertex<NetworkPoint> *t, double f) 
     }
 }
 
+/*
+ *Time Complexity: O(V)
+ */
 void Graph::addSuperSourceAndSink() {
     std::vector<Vertex<NetworkPoint> *> sources;
     std::vector<Vertex<NetworkPoint> *> sinks;
@@ -602,7 +615,9 @@ void Graph::addSuperSourceAndSink() {
     }
 }
 
-
+/*
+ * Time Complexity: O(1)
+ */
 void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w,
                          double residual) {
     if (!w->isVisited() && residual > 0) {
@@ -612,6 +627,10 @@ void Graph::testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoin
     }
 }
 
+/*
+ * Time Complexity:  O(E) if Edmonds-Karp has already been called.
+ * If not: O(V * E^2)
+ */
 double Graph::getMaxFlow(NetworkPoint city) {
     if (!maxFlowRan) {
         edmondsKarp();
@@ -629,6 +648,10 @@ double Graph::getMaxFlow(NetworkPoint city) {
     return maxFlow;
 }
 
+/*
+ * Time Complexity:  O(V + E) if Edmonds-Karp has already been called.
+ * If not: O(V * E^2)
+ */
 std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWaterSupply() {
     //calculateMaxFlowForAll(); // Calculate maximum flow using Max Flow algorithm
 
@@ -658,6 +681,10 @@ std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWater
     return result;
 }
 
+/**
+ * @brief Prints the values returned from the 'checkWaterSupply()' function.
+ * @Complexity O(n)
+ */
 void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
     if(!supply.empty()) {
         std::cout << std::endl;
@@ -670,6 +697,10 @@ void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double
     }
 }
 
+/*
+ * Time Complexity:  O(V + E) if Edmonds-Karp has already been called.
+ * If not: O(V * E^2)
+ */
 std::vector<double> Graph::calculateMetrics() {
     if (!maxFlowRan) {
         edmondsKarp();
@@ -714,6 +745,9 @@ std::vector<double> Graph::calculateMetrics() {
     return results;
 }
 
+/**
+ * @Complexity O(V + E)
+ */
 void Graph::balanceLoad(double averageDifference) {
     // load balancing heuristic
     for (const auto &p: vertexSet) {
@@ -734,6 +768,10 @@ void Graph::balanceLoad(double averageDifference) {
     }
 }
 
+/**
+ *
+ * @Complexity O(n)
+ */
 void Graph::printMetrics(std::vector<double> metric) {
     std::cout << "Average Difference: " << metric.at(0) << std::endl;
     std::cout << "Variance: " << metric.at(1) << std::endl;
@@ -741,6 +779,9 @@ void Graph::printMetrics(std::vector<double> metric) {
     std::cout << "Max Difference: " << metric.at(3) << std::endl << std::endl;
 }
 
+/**
+ *@Complexity O(V + E)
+ */
 Graph *Graph::copyGraph() {
     Graph *newGraph = new Graph();
 
