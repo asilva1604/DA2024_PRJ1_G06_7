@@ -762,3 +762,8 @@ Graph *Graph::copyGraph() {
     // newGraph->updateAllVerticesFlow();
     return newGraph;
 }
+
+template<class T>
+void Edge<T>::setWeight(double w) {
+    weight = w;
+}

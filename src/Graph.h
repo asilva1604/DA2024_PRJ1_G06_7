@@ -71,6 +71,7 @@ public:
 
     Vertex<T> * getDest() const;
     double getWeight() const;
+    void setWeight(double w);
     bool isSelected() const;
     Vertex<T> * getOrig() const;
     Edge<T> *getReverse() const;

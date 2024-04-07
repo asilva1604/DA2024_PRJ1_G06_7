@@ -13,6 +13,7 @@
 class Application {
     Graph network_;
     std::vector<std::string> cities_;
+    std::unordered_map<std::string, double> maxFlows_;
 
 public:
     Application();
@@ -21,7 +22,7 @@ public:
     void maxFlow(std::string c);
     void waterSupply();
     void metrics();
-    void reservoir();
+    void reservoir(std::string r);
     void stations();
     void pipelines();
     void goBack();

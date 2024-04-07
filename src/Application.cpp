@@ -78,7 +78,9 @@ void Application::menu() {
                 metrics();
                 break;
             case 4:
-                reservoir();
+                cout << "Enter the reservoir to take out.";
+                cin >> sel;
+                reservoir(sel);
                 break;
             case 5:
                 stations();
@@ -101,6 +103,7 @@ void Application::maxFlow(string c) {
     if (c == "all") {
         for (const auto &city: cities_) {
             flow = network_.getMaxFlow(NetworkPoint(city));
+            maxFlows_.emplace(city, double);
             std::cout << "Max flow to city " << city << " is " << flow << std::endl;
         }
         goBack();
@@ -144,7 +147,22 @@ void Application::metrics() {
     goBack();
 }
 
-void Application::reservoir() {
+void Application::reservoir(string r) {
+    maxFlow("all");
+
+    unordered_map<string, double> newFlows;
+
+    auto source = network_.findVertex(NetworkPoint("source"));
+
+    if (source == nullptr) return;
+
+    for (const auto &edge : source->getAdj()) {
+        if (edge->getDest()->getInfo().getCode() == r) {
+            edge->setWeight(0.0);
+        }
+    }
+
+
 
     goBack();
 }
