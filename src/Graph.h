@@ -136,22 +136,13 @@ public:
      * @param city
      */
     double getMaxFlow(NetworkPoint city);
-
     std::vector<std::pair<std::string, std::pair<double, double>>> checkWaterSupply();
-
     void printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
-  
     std::vector<double> calculateMetrics();
-
     void balanceLoad(double averageDifference);
-
     void printMetrics(std::vector<double> metric);
-
-    std::vector<std::pair<std::string, std::pair<double, double>>>outOfCommission_WS(Vertex<NetworkPoint> *ommited);
-
-    void printWaterSupplyChanges(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
-
-    Graph * copyGraph();
+    std::vector<std::pair<std::string, std::pair<double, double>>>outOfCommissionVertex(Vertex<NetworkPoint> *element, std::vector<std::pair<std::string, std::pair<double, double>>> oldSupply);
+    void printNewWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply);
 
 protected:
     std::unordered_map<std::string, Vertex<NetworkPoint> *> vertexSet;    // vertex set
@@ -166,9 +157,12 @@ protected:
      * serves to store if the maximum flow edmond karps algorithm has already been ran
      */
     bool maxFlowRan = false;
+    bool maxFlowRanNewGraph = false;
 
     void testAndVisit(std::queue<Vertex<NetworkPoint> *> &q, Edge<NetworkPoint> *e, Vertex<NetworkPoint> *w, double residual);
     void edmondsKarp();
+
+    Graph *copyGraph();
 };
 
 void deleteMatrix(int **m, int n);

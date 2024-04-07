@@ -672,7 +672,7 @@ std::vector<std::pair<std::string, std::pair<double, double>>> Graph::checkWater
 }
 
 void Graph::printWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
-    if(!supply.empty()) {
+    if (!supply.empty()) {
         std::cout << std::endl;
         for (const auto &s: supply) {
             std::cout << "City: " << s.first << std::endl;
@@ -754,14 +754,12 @@ void Graph::printMetrics(std::vector<double> metric) {
 Graph *Graph::copyGraph() {
     Graph *newGraph = new Graph();
 
-    // Copy vertices
     for (const auto &p: vertexSet) {
         auto v = p.second;
 
         newGraph->addVertex(v->getInfo());
     }
 
-    // Copy edges
     for (const auto &p: vertexSet) {
         auto v = p.second;
 
@@ -776,25 +774,29 @@ Graph *Graph::copyGraph() {
     return newGraph;
 }
 
-std::vector<std::pair<std::string, std::pair<double, double>>> Graph::outOfCommission_WS(Vertex<NetworkPoint> *ommited) {
-    auto waterSupply = checkWaterSupply();
-    Graph* g  = copyGraph();
-    g->removeVertex(ommited->getInfo());
+std::vector<std::pair<std::string, std::pair<double, double>>>
+Graph::outOfCommissionVertex(Vertex<NetworkPoint> *element,
+                             std::vector<std::pair<std::string, std::pair<double, double>>> oldSupply) {
+    // auto waterSupply = checkWaterSupply();
+
+    Graph *g = copyGraph();
+    g->removeVertex(element->getInfo());
     auto newWaterSupply = g->checkWaterSupply();
     std::vector<std::pair<std::string, std::pair<double, double>>> res;
-    for ( auto element : newWaterSupply) {
-        if (find(waterSupply.begin(), waterSupply.end(), element) == waterSupply.end()) {
-            auto old_flow = getMaxFlow(element.first);
-            auto new_flow = element.second.second;
-            res.emplace_back(element.first, std::make_pair(old_flow, new_flow));
+
+    for (auto s: newWaterSupply) {
+        if (find(oldSupply.begin(), oldSupply.end(), s) == oldSupply.end()) {
+            auto old_flow = getMaxFlow(s.first);
+            auto new_flow = s.second.second;
+            res.emplace_back(s.first, std::make_pair(old_flow, new_flow));
         }
     }
-    delete g;
+
     return res;
 }
 
-void Graph::printWaterSupplyChanges(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
-    if(!supply.empty()) {
+void Graph::printNewWaterSupply(std::vector<std::pair<std::string, std::pair<double, double>>> supply) {
+    if (!supply.empty()) {
         std::cout << std::endl;
         for (const auto &s: supply) {
             std::cout << "City: " << s.first << std::endl;

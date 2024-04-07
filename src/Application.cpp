@@ -66,7 +66,7 @@ void Application::menu() {
         string sel;
         switch (choice) {
             case 1:
-                cout << "Enter the city: ";
+                cout << "Enter the city's code: ";
                 cin >> sel;
                 maxFlow(sel);
                 break;
@@ -77,7 +77,7 @@ void Application::menu() {
                 metrics();
                 break;
             case 4:
-                cout << "Enter the reservoir's code: ";
+                cout << "Enter the reservoir's code to remove: ";
                 cin >> sel;
                 reservoir(sel);
                 break;
@@ -107,11 +107,12 @@ void Application::maxFlow(string c) {
 }
 
 void Application::waterSupply() {
-
     // calculate water supply
-    std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.checkWaterSupply();
+    if(!waterSupplyRan)
+        supply = network_.checkWaterSupply();
     // PRINT WATER SUPPLY
-    network_.printWaterSupply(waterSupply);
+    network_.printWaterSupply(supply);
+    waterSupplyRan = true;
     goBack();
 }
 
@@ -135,19 +136,23 @@ void Application::metrics() {
 }
 
 void Application::reservoir(string c) {
-    auto wr = network_.findVertex(c);
+    auto wr = network_.findVertex(c); // reservoir
     if (wr == nullptr) {
-        std::cout << "Couldn't find the water reservoir with the selected code" << std::endl;
+        std::cout << "Water reservoir does not exist!" << std::endl;
         goBack();
     }
     else {
-        // calculate water supply
-        std::vector<std::pair<std::string, std::pair<double, double>>> waterSupply = network_.outOfCommission_WS(wr);
+        if(!waterSupplyRan)
+            // calculate water supply
+            supply = network_.checkWaterSupply();
+
+        auto newWaterSupply = network_.outOfCommissionVertex(wr, supply);
+
         // PRINT WATER SUPPLY
-        if (!waterSupply.empty()){
-            std::cout << "Reservoir " << c << ": "<<" is  removed (it had a maximum delivery of "
+        if (!newWaterSupply.empty()){
+            std::cout << "Reservoir " << c << ": "<<" is removed (it had a maximum delivery of "
             << wr->getInfo().getMaxDelivery() << " m3/sec)"<< std::endl;
-            network_.printWaterSupplyChanges(waterSupply);
+            network_.printNewWaterSupply(newWaterSupply);
         }
         goBack();
     }
